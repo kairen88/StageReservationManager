@@ -17,6 +17,7 @@ $date_reserved_to  =    $_POST['dateTo'];
 $stage_id  =    $_POST['stageId'];
 $spec_id   =    $_POST['specId'];
 $spec_name  =    $_POST['specName'];
+$reservation_id=   $_POST['reservationId'];
 
 echo " post success" ;
 
@@ -34,7 +35,7 @@ if(isset($_POST['btnRegister'])) //===When I will Set the Button to 1 or Press B
 {
 echo " if success" ;
 $q= " COUNT * FROM stageReservation";
-$reservation_id=   mysql_query($q)+1;
+//$reservation_id=   mysql_query($q)+1;
 $query    =    "INSERT INTO stageReservation(date_reserved,date_reserved_from,date_reserved_to,stage_id,spec_id,spec_name,reservation_id)
 					   VALUES('$date_reserved','$date_reserved_from','$date_reserved_to','$stage_id','$spec_id','$spec_name','$reservation_id')";
 $res    =    mysql_query($query);
