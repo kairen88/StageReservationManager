@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<title>Stage Reservation App</title> 
+
+<script type="text/javascript">
+function addRow(dateFrom,dateTo, stageId, specName, specId, dateReserved)
+{
+         if (!document.getElementsByTagName) return;
+         tabBody=document.getElementsByTagName("TBODY").item(0);
+         row=document.createElement("TR");
+		 
+         dateFromCell = document.createElement("TD");
+         dateToCell = document.createElement("TD");
+		 stageIdCell = document.createElement("TD");
+		 specNameCell = document.createElement("TD");
+		 specIdCell = document.createElement("TD");
+		 dateReservedCell = document.createElement("TD");
+		 
+         dateFromtextnode=document.createTextNode(dateFrom);
+         dateToTextNode=document.createTextNode(dateTo);
+		 stageIdTextNode=document.createTextNode(stageId);
+		 specNameTextNode=document.createTextNode(specName);
+		 specIdTextNode=document.createTextNode(specId);
+		 dateReservedTextNode=document.createTextNode(dateReserved);		 
+		 
+		 dateFromCell.appendChild(dateFromtextnode);
+         dateToCell.appendChild(dateToTextNode);
+		 stageIdCell.appendChild(stageIdTextNode);
+		 specNameCell.appendChild(specNameTextNode);
+		 specIdCell.appendChild(specIdTextNode);
+		 dateReservedCell.appendChild(dateReservedTextNode);
+		 
+         tabBody.appendChild(row);
+
+
+}
+</script>
+
+</head> 
+
+<body> 
+
+<table border='1' id='mytable'>
+<tbody>
+<tr><th>Date From</th><th>Date To</th><th>Stage</th><th>Spec Name</th><th>Spec ID</th><th>Reservation Date</th></tr>
+</tbody>
+</table>
+<button onClick='addRow("123","456", "2", "3", "4", "5");return false;'>
+Add Row</button>
+
+</br>
+
+<form name="input" action="/reserve.php" method="post">
+
+DateFrom: <input type="text" name="dateFrom" /> 
+</br>
+dateTo: <input type="text" name="dateTo" /> 
+</br>
+stageId: <input type="text" name="stageId" /> 
+</br>
+specName: <input type="text" name="specName" /> 
+</br>
+specId: <input type="text" name="specId" /> 
+</br>
+dateReserved: <input type="text" name="dateReserved" /> <input type="submit" value="Submit" name="btnRegister"/>
+
+</form>
+
+</body> 
+</html>
