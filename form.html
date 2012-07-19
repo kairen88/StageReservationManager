@@ -4,10 +4,25 @@
 <head> 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
 <title>Stage Reservation App</title> 
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="validate.js"></script>
+<link href="styles.css"rel="stylesheet" type="text/css" media="screen" >
+<link href="validate.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <style type="text/css">
+        @import "http://o.aolcdn.com/dojo/1.0/dijit/themes/tundra/tundra.css";
 
+    </style>
+ 
+    <script type="text/javascript" src="http://o.aolcdn.com/dojo/1.0/dojo/dojo.xd.js"
+        djConfig="parseOnLoad: true"></script>
+ 
+    <script type="text/javascript">
+        dojo.require("dijit.form.DateTextBox");
+    </script>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <script language="javascript" src="calendar.js"></script>
 <script type="text/javascript">
+
 
 function addRowInitial(dateFrom,dateTo, stageId, specName, specId, dateReserved)
 {
@@ -193,22 +208,12 @@ function createTable()
 
 </script>
 
-    <style type="text/css">
-        @import "http://o.aolcdn.com/dojo/1.0/dijit/themes/tundra/tundra.css";
-        @import "http://o.aolcdn.com/dojo/1.0/dojo/resources/dojo.css"
-    </style>
- 
-    <script type="text/javascript" src="http://o.aolcdn.com/dojo/1.0/dojo/dojo.xd.js"
-        djConfig="parseOnLoad: true"></script>
- 
-    <script type="text/javascript">
-        dojo.require("dijit.form.DateTextBox");
-    </script>
+
 
 </head> 
 
 <body> 
-<a href="admin.html"> Admin Login </a>
+<a href="admin.html"> <h3>Admin Login</h3> </a>
 
 <table border='1' id='mytable'>
 <tbody>
@@ -228,8 +233,12 @@ create table</button>
 
 </br>
 
-<form name="input2" action="/reserve.php" method="post">
-stageName: STAGE2VM <select name="stageName">
+	  <form action="/reserve.php" method="post">
+    <ol class="forms">
+        
+        <li>
+          <label for="name"><em class="required">*</em> Stage Name</label>
+          <select name="stageName">
   <option value="">Select...</option>
   <option value="STAGE2VM4236">4236</option>
   <option value="STAGE2VM4237">4237</option>
@@ -244,22 +253,43 @@ stageName: STAGE2VM <select name="stageName">
   <option value="STAGE2VM4247">4247</option>
 		 
 </select>
-</br></br>
-<body class="tundra">
- Reservation period : <br />
-From:<input type="text" name="dateFrom"  dojoType="dijit.form.DateTextBox"
-                required="true" />
-To: <input type="text" name="dateTo"  dojoType="dijit.form.DateTextBox"
-                required="true" />
-</br></br>
-</body>
-specName: <input type="text" name="specName" /> 
-</br></br>
-specId: <input type="text" name="specId" /> 
-</br></br>
-<input type="submit" value="Submit" name="btnRegister"/>
+        </li>
+		
+		<li>
+		 <label for="name"><em class="required">*</em>	Reservation period : </label>
+		</li>
+		
+		<li>
+		<label for="dateFrom"><em class="required">*</em>From: </label>
+		<div class="tundra">
+		<input type="text" name="dateFrom"  dojoType="dijit.form.DateTextBox" required="true" />
+		</div>
+		</li>
+		
+		
+		<li>
+		<label for="dateTo"><em class="required">*</em>To:</label>
+		<body class="tundra">
+		<input type="text" name="dateTo"  dojoType="dijit.form.DateTextBox" required="true" />
+		</body>
+		</li>
+        &nbsp
+        <li>
+          <label for="specName"><em class="required">*</em>specName</label>
+          <input type="text" name="specName" id="specName" />
+        </li>
 
-</form>
+        <li>
+          <label for="specId"><em class="required">*</em>specId</label>
+          <input type="text" name="specId" id="specId" />
+        </li>
+    </ol>
+    <ol class="forms">
+      <li class="buttons submit">
+        <button type="submit">Submit </button>
+      </li>
+    </ol>
+      </form>
 
 </body> 
 </html>
