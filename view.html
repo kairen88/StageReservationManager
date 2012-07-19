@@ -1,0 +1,136 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<title>Stage Reservation App</title> 
+
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script language="javascript" src="calendar.js"></script>
+<script type="text/javascript">
+
+
+function addRow(dateFrom,dateTo, stageId, specName, specId, dateReserved)
+{
+
+         if (!document.getElementsByTagName) return;
+         tabBody=document.getElementsByClassName("reservationTable").item(0);
+         row=document.createElement("TR");
+		 
+		 row.innerHTML = '<td>' + dateFrom + '</td>'
+							+ '<td>' + dateTo + '</td>'
+							+ '<td>' + stageId + '</td>'
+							+ '<td>' + specName + '</td>'
+							+ '<td>' + specId + '</td>'
+							+ '<td>' + dateReserved + '</td>';		          
+		 
+         tabBody.appendChild(row);
+}
+
+function addRow2(row)
+{
+
+         if (!document.getElementsByTagName) return;
+         tabBody=document.getElementsByClassName("reservationTable").item(0);
+         rowElement=document.createElement("TR");
+		 
+		 alert(row.reservation_id);
+		 
+		 rowHTML = '';
+		 for(field in row)
+		 {
+			//if(row[field].hasOwnProperty(field))
+				if(row[field] != row.reservation_id)
+					rowHTML = rowHTML + '<td>' + row[field] + '</td>'
+			
+			alert(field);
+		 }
+		 
+		 rowElement.innerHTML = rowHTML;		 	          
+		 
+         tabBody.appendChild(rowElement);
+}
+
+function getTableData()
+{
+	$.getJSON('http://saran93.zxq.net/display.php', function(table) {
+		alert(table.length); //this should alert 'value1'
+		
+		for(row in table)
+		{
+			addRow2(table[row])
+		}
+		
+	});
+}
+
+function getTableDataOriginal()
+{
+	$.getJSON('http://saran93.zxq.net/display.php', function(table) {
+		alert(table.length); //this should alert 'value1'
+		
+		for(row in table)
+		{
+			addRow(table[row].date_reserved_from, table[row].date_reserved_to, table[row].stage_name, table[row].spec_name, table[row].spec_id, table[row].date_reserved)
+		}
+		
+	});
+}
+
+
+function createTable()
+{
+
+	if (!document.getElementsByTagName) return;
+
+	tableDiv=document.getElementsByClassName("tableDiv").item(0);
+	table = document.createElement("TABLE");
+	
+	table.setAttribute('border','2');
+	table.setAttribute('class','reservationTable');
+	
+	//test array to allow creating table with headings from array
+	var headings = new Array("Date From", "Date To", "Stage", "Spec Name", "Spec ID", "Reservation Date");
+	
+	rowHTML = '';	
+	for(title in headings)
+		rowHTML = rowHTML + '<th>' + headings[title] + '</th>';
+	
+	table.innerHTML = '<tbody><tr>' + rowHTML + '</tr></tbody>';
+	tableDiv.appendChild(table);
+	
+	getTableData();
+}
+
+
+
+</script>
+
+    <style type="text/css">
+        @import "http://o.aolcdn.com/dojo/1.0/dijit/themes/tundra/tundra.css";
+        @import "http://o.aolcdn.com/dojo/1.0/dojo/resources/dojo.css"
+    </style>
+ 
+    <script type="text/javascript" src="http://o.aolcdn.com/dojo/1.0/dojo/dojo.xd.js"
+        djConfig="parseOnLoad: true"></script>
+ 
+    <script type="text/javascript">
+        dojo.require("dijit.form.DateTextBox");
+    </script>
+
+</head> 
+
+<body> 
+<a href="admin.html"> Admin Login </a>
+
+<div class="tableDiv"></div>
+
+
+<button onClick='createTable();return false;'>
+create table</button>
+
+</br>
+
+
+</body> 
+</html>
