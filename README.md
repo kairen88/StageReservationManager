@@ -1,4 +1,0 @@
-StageReservationManager
-=======================
-
-Stage Reservation Manager

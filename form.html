@@ -1,0 +1,265 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<title>Stage Reservation App</title> 
+
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script language="javascript" src="calendar.js"></script>
+<script type="text/javascript">
+
+function addRowInitial(dateFrom,dateTo, stageId, specName, specId, dateReserved)
+{
+         if (!document.getElementsByTagName) return;
+         tabBody=document.getElementsByClassName("reservationTable").item(0);
+         row=document.createElement("TR");
+		 
+         dateFromCell = document.createElement("TD");
+         dateToCell = document.createElement("TD");
+		 stageIdCell = document.createElement("TD");
+		 specNameCell = document.createElement("TD");
+		 specIdCell = document.createElement("TD");
+		 dateReservedCell = document.createElement("TD");
+		 
+         dateFromtextnode=document.createTextNode(dateFrom);
+         dateToTextNode=document.createTextNode(dateTo);
+		 stageIdTextNode=document.createTextNode(stageId);
+		 specNameTextNode=document.createTextNode(specName);
+		 specIdTextNode=document.createTextNode(specId);
+		 dateReservedTextNode=document.createTextNode(dateReserved);		 
+		 
+		 dateFromCell.appendChild(dateFromtextnode);
+         dateToCell.appendChild(dateToTextNode);
+		 stageIdCell.appendChild(stageIdTextNode);
+		 specNameCell.appendChild(specNameTextNode);
+		 specIdCell.appendChild(specIdTextNode);
+		 dateReservedCell.appendChild(dateReservedTextNode);
+		 
+		 row.appendChild(dateFromCell);
+		 row.appendChild(dateToCell);
+		 row.appendChild(stageIdCell);
+		 row.appendChild(specNameCell);
+		 row.appendChild(specIdCell);
+		 row.appendChild(dateReservedCell);
+		 
+         tabBody.appendChild(row);
+
+
+}
+
+function addRow(dateFrom,dateTo, stageId, specName, specId, dateReserved)
+{
+
+         if (!document.getElementsByTagName) return;
+         tabBody=document.getElementsByClassName("reservationTable").item(0);
+         row=document.createElement("TR");
+		 
+		 row.innerHTML = '<td>' + dateFrom + '</td>'
+							+ '<td>' + dateTo + '</td>'
+							+ '<td>' + stageId + '</td>'
+							+ '<td>' + specName + '</td>'
+							+ '<td>' + specId + '</td>'
+							+ '<td>' + dateReserved + '</td>';		          
+		 
+         tabBody.appendChild(row);
+}
+
+function addRow2(row)
+{
+
+         if (!document.getElementsByTagName) return;
+         tabBody=document.getElementsByClassName("reservationTable").item(0);
+         rowElement=document.createElement("TR");
+		 
+		 alert(row.reservation_id);
+		 
+		 rowHTML = '';
+		 for(field in row)
+		 {
+			//if(row[field].hasOwnProperty(field))
+				if(row[field] != row.reservation_id)
+					rowHTML = rowHTML + '<td>' + row[field] + '</td>'
+			
+			alert(field);
+		 }
+		 
+		 rowElement.innerHTML = rowHTML;		 	          
+		 
+         tabBody.appendChild(rowElement);
+}
+
+function getTableData()
+{
+	$.getJSON('http://saran93.zxq.net/display.php', function(table) {
+		alert(table.length); //this should alert 'value1'
+		
+		for(row in table)
+		{
+			addRow2(table[row])
+		}
+		
+	});
+}
+
+function getTableDataOriginal()
+{
+	$.getJSON('http://saran93.zxq.net/display.php', function(table) {
+		alert(table.length); //this should alert 'value1'
+		
+		for(row in table)
+		{
+			addRow(table[row].date_reserved_from, table[row].date_reserved_to, table[row].stage_name, table[row].spec_name, table[row].spec_id, table[row].date_reserved)
+		}
+		
+	});
+}
+
+function createTableInitial()
+{
+
+	if (!document.getElementsByTagName) return;
+
+	tableDiv=document.getElementsByClassName("tableDiv").item(0);
+	
+	alert(tableDiv);	
+	
+	table = document.createElement("TABLE");
+	tbody = document.createElement("TBODY");
+	headerRow = document.createElement("TR");
+	
+	table.setAttribute("border", "1");
+	table.setAttribute("id", "reservationTable");
+	
+	dateFromCell = document.createElement("TH");
+	dateToCell = document.createElement("TH");
+	stageIdCell = document.createElement("TH");
+	specNameCell = document.createElement("TH");
+	specIdCell = document.createElement("TH");
+	dateReservedCell = document.createElement("TH");
+	
+	dateFromText = document.createTextNode("Date From");
+	dateToText = document.createTextNode("Date To");
+	stageIdText = document.createTextNode("Stage ID");
+	specNameText = document.createTextNode("Spec Name");
+	specIdText = document.createTextNode("Spec ID");
+	dateReservedText = document.createTextNode("Date Reserved");
+	
+	dateFromCell.appendChild(dateFromText);
+	dateToCell.appendChild(dateToText); 
+	stageIdCell.appendChild(stageIdText); 
+	specNameCell.appendChild(specNameText);
+	specIdCell.appendChild(specIdText); 
+	dateReservedCell.appendChild(dateReservedText);
+	
+	headerRow.appendChild(dateFromCell);
+	headerRow.appendChild(dateToCell); 
+	headerRow.appendChild(stageIdCell); 
+	headerRow.appendChild(specNameCell);
+	headerRow.appendChild(specIdCell); 
+	headerRow.appendChild(dateReservedCell);
+	
+	
+	tbody.appendChild(headerRow);
+	table.appendChild(tbody);
+	tableDiv.appendChild(table);
+}
+
+function createTable()
+{
+
+	if (!document.getElementsByTagName) return;
+
+	tableDiv=document.getElementsByClassName("tableDiv").item(0);
+	table = document.createElement("TABLE");
+	
+	table.setAttribute('border','2');
+	table.setAttribute('class','reservationTable');
+	
+	//test array to allow creating table with headings from array
+	var headings = new Array("Date From", "Date To", "Stage", "Spec Name", "Spec ID", "Reservation Date");
+	
+	rowHTML = '';	
+	for(title in headings)
+		rowHTML = rowHTML + '<th>' + headings[title] + '</th>';
+	
+	table.innerHTML = '<tbody><tr>' + rowHTML + '</tr></tbody>';
+	tableDiv.appendChild(table);
+	
+	getTableData();
+}
+
+
+
+</script>
+
+    <style type="text/css">
+        @import "http://o.aolcdn.com/dojo/1.0/dijit/themes/tundra/tundra.css";
+        @import "http://o.aolcdn.com/dojo/1.0/dojo/resources/dojo.css"
+    </style>
+ 
+    <script type="text/javascript" src="http://o.aolcdn.com/dojo/1.0/dojo/dojo.xd.js"
+        djConfig="parseOnLoad: true"></script>
+ 
+    <script type="text/javascript">
+        dojo.require("dijit.form.DateTextBox");
+    </script>
+
+</head> 
+
+<body> 
+<a href="admin.html"> Admin Login </a>
+
+<table border='1' id='mytable'>
+<tbody>
+<tr><th>Date From</th><th>Date To</th><th>Stage</th><th>Spec Name</th><th>Spec ID</th><th>Reservation Date</th></tr>
+</tbody>
+</table>
+
+<div class="tableDiv"></div>
+
+<button onClick='getTableData();return false;'>
+populate table</button>
+
+</br>
+
+<button onClick='createTable();return false;'>
+create table</button>
+
+</br>
+
+<form name="input2" action="/reserve.php" method="post">
+stageName: STAGE2VM <select name="stageName">
+  <option value="">Select...</option>
+  <option value="STAGE2VM4236">4236</option>
+  <option value="STAGE2VM4237">4237</option>
+  <option value="STAGE2VM4238">4238</option>
+  <option value="STAGE2VM4239">4239</option>
+  <option value="STAGE2VM4240">4240</option>
+  <option value="STAGE2VM4241">4242</option>
+  <option value="STAGE2VM4243">4243</option>
+  <option value="STAGE2VM4244">4244</option>
+  <option value="STAGE2VM4245">4245</option>
+  <option value="STAGE2VM4246">4246</option>
+  <option value="STAGE2VM4247">4247</option>
+		 
+</select>
+</br></br>
+<body class="tundra">
+ Reservation period : <br />
+From:<input type="text" name="dateFrom"  dojoType="dijit.form.DateTextBox"
+                required="true" />
+To: <input type="text" name="dateTo"  dojoType="dijit.form.DateTextBox"
+                required="true" />
+</br></br>
+</body>
+specName: <input type="text" name="specName" /> 
+</br></br>
+specId: <input type="text" name="specId" /> 
+</br></br>
+<input type="submit" value="Submit" name="btnRegister"/>
+
+</form>
+
+</body> 
+</html>
