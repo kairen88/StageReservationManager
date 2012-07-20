@@ -7,11 +7,10 @@
 
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <script src="http://saran93.zxq.net/lib/date.js"></script>
-<script language="javascript" src="calendar.js"></script>
+<script type="text/javascript" src="http://saran93.zxq.net/lib/monthpicker.min.js"></script>
 <script type="text/javascript">
 
-
-function addRow(dateFrom,dateTo, stageId, specName, specId, dateReserved)
+function addRowOld(dateFrom,dateTo, stageId, specName, specId, dateReserved)
 {
 
          if (!document.getElementsByTagName) return;
@@ -28,12 +27,13 @@ function addRow(dateFrom,dateTo, stageId, specName, specId, dateReserved)
          tabBody.appendChild(row);
 }
 
-function addRow2(row)
+function addRow(row)
 {
 
          if (!document.getElementsByTagName) return;
-         tabBody=document.getElementsByClassName("reservationTable").item(0);
-         rowElement=document.createElement("TR");
+         tabBody= document.getElementById("reservationTable");
+		 //alert(tabBody);
+         rowElement=document.createElement("tr");
 
 		 
 		 rowHTML = '';
@@ -50,26 +50,27 @@ function addRow2(row)
          tabBody.appendChild(rowElement);
 }
 
-function populateTable(stageArray)
+function populateTable(monthSelected, stageArray)
 {
 	$.getJSON('http://saran93.zxq.net/display.php', function(table) {
 
 		//need to get month to display from user
-		var objMonth = new Date("2012-07-01");
-		var objMonthEnd = new Date("2012-07-01");
-		daysInMonth = Date.getDaysInMonth(objMonth.getFullYear(), objMonth.getMonth());
+		var objMonth = new Date(monthSelected);
+		var objMonthEnd = new Date(monthSelected);
+		//daysInMonth = Date.getDaysInMonth(objMonth.getFullYear(), objMonth.getMonth());
+		daysPerMonth = DaysInMonth(objMonth.getFullYear(), objMonth.getMonth());
 		
-		objMonthEnd.setDate(objMonthEnd.getDate()+ daysInMonth);
+		objMonthEnd.setDate(objMonthEnd.getDate()+ daysPerMonth);
 		
-		alert(stageArray);
-
+		//alert(stageArray);alert(daysPerMonth);
 		
-		//for(var day = 1; day <= Date.getDaysInMonth(objMonth.getFullYear(), objMonth.getMonth()); day++ )
+		//for(idx = 1; idx <= daysPerMonth; idx++ )
 		for(var day = objMonth; day < objMonthEnd; day.setDate(day.getDate()+1) )
 		{
-
 			ary = new Array(objMonth.toString("MMMM"), day.getDate());
 			specNameAry = new Array();
+			
+			
 			
 			//populating spaces in specNameAry
 			for(item in stageArray)
@@ -99,7 +100,7 @@ function populateTable(stageArray)
 			for(idx = 0; idx <  specNameAry.length; idx++)
 				ary.push( specNameAry[idx] );
 			
-			addRow2(ary)
+			addRow(ary)
 		}
 		
 		//while(objDateFrom < objDateTo)
@@ -137,21 +138,21 @@ function getTableDataOriginal()
 }
 
 
-function createTable(stageHeadings)
+function createTable(monthSelected)
 {
 
 	if (!document.getElementsByTagName) return;
 
-	tableDiv=document.getElementsByClassName("tableDiv").item(0);
-	table = document.createElement("TABLE");
+	tableDiv=document.getElementById("tableDiv");
+	//alert(tableDiv);
+	table = document.createElement("table");
+	//table = createElement("table");
 	
 	table.setAttribute('border','2');
-	table.setAttribute('class','reservationTable');
+	table.setAttribute('id','reservationTable');
 	
-	alert(stageHeadings);
-	
-	//test array to allow creating table with headings from array
-	//var headings = new Array("Date From", "Date To", "Stage", "Spec Name", "Spec ID", "Reservation Date");
+	//clear the div
+	emptyDiv(tableDiv)
 	
 	
 	$.getJSON('http://saran93.zxq.net/displayStage.php', function(stages) {
@@ -172,7 +173,7 @@ function createTable(stageHeadings)
 		table.innerHTML = '<tbody><tr>' + rowHTML + '</tr></tbody>';
 		tableDiv.appendChild(table);
 		
-		populateTable(stageArray);		
+		populateTable(monthSelected, stageArray);		
 	});
 	
 	
@@ -185,12 +186,49 @@ function date()
 }
 
 
+
+
+$(function(){		
+
+		$("#example_2").monthpicker("2012-12",callback);		
+		
+	});
+	
+function callback(data,$e){
+	var str = "";
+	for(key in data) {
+		str += " " + key + ": " + data[key]+ "; ";
+	}
+	
+	
+	
+	monthSelected = data["year"] + '-' + '0' + data["month"] + '-' + "01";
+	alert(monthSelected);
+	createTable(monthSelected);
+}
+
+function emptyDiv (divToClear){
+	var i;
+	while (i=divToClear.childNodes[0])
+	{
+		if (i.nodeType == 1 || i.nodeType == 3)
+		{
+			divToClear.removeChild(i);
+		}
+	}		
+}
+
+function createElement (elementName)
+{
+	return '<' + elementName + '></' + elementName + '>';
+}
+
+function DaysInMonth(y,m) { return new Date(y,m,0).getDate(); }
+
 </script>
 
-    <style type="text/css">
-        @import "http://o.aolcdn.com/dojo/1.0/dijit/themes/tundra/tundra.css";
-        @import "http://o.aolcdn.com/dojo/1.0/dojo/resources/dojo.css"
-    </style>
+<link rel="stylesheet" href="http://saran93.zxq.net/css/monthpicker.css" type="text/css" charset="utf-8" />
+
  
     <script type="text/javascript" src="http://o.aolcdn.com/dojo/1.0/dojo/dojo.xd.js"
         djConfig="parseOnLoad: true"></script>
@@ -204,16 +242,15 @@ function date()
 <body> 
 
 
-<div class="tableDiv"></div>
 
 
-<button onClick='createTable(["STAGE1", "STAGE11", "STAGE111", "STAGE1111", "STAGE111111", "STAGE1111111"]);return false;'>
+
+<button onClick='createTable("2012-07-01");return false;'>
 create table</button>
-
 </br>
+<div class="MonthPicker" id="example_2" style="width:780px;" title="Example 2">Month Picker v2</div>
+<div id="tableDiv"></div>
 
-<button onClick='date();return false;'>
-date test</button>
 
 </body> 
 </html>
