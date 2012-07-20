@@ -6,6 +6,7 @@
 <title>Stage Reservation App</title> 
 
 <script src="http://code.jquery.com/jquery-latest.js"></script>
+<script src="http://saran93.zxq.net/lib/date.js"></script>
 <script language="javascript" src="calendar.js"></script>
 <script type="text/javascript">
 
@@ -33,8 +34,7 @@ function addRow2(row)
          if (!document.getElementsByTagName) return;
          tabBody=document.getElementsByClassName("reservationTable").item(0);
          rowElement=document.createElement("TR");
-		 
-		 alert(row.reservation_id);
+
 		 
 		 rowHTML = '';
 		 for(field in row)
@@ -43,7 +43,6 @@ function addRow2(row)
 				if(row[field] != row.reservation_id)
 					rowHTML = rowHTML + '<td>' + row[field] + '</td>'
 			
-			alert(field);
 		 }
 		 
 		 rowElement.innerHTML = rowHTML;		 	          
@@ -51,15 +50,75 @@ function addRow2(row)
          tabBody.appendChild(rowElement);
 }
 
-function getTableData()
+function populateTable(stageArray)
 {
 	$.getJSON('http://saran93.zxq.net/display.php', function(table) {
-		alert(table.length); //this should alert 'value1'
+
+		//need to get month to display from user
+		var objMonth = new Date("2012-07-01");
+		var objMonthEnd = new Date("2012-07-01");
+		daysInMonth = Date.getDaysInMonth(objMonth.getFullYear(), objMonth.getMonth());
 		
-		for(row in table)
+		objMonthEnd.setDate(objMonthEnd.getDate()+ daysInMonth);
+		
+		alert(stageArray);
+
+		
+		//for(var day = 1; day <= Date.getDaysInMonth(objMonth.getFullYear(), objMonth.getMonth()); day++ )
+		for(var day = objMonth; day < objMonthEnd; day.setDate(day.getDate()+1) )
 		{
-			addRow2(table[row])
+
+			ary = new Array(objMonth.toString("MMMM"), day.getDate());
+			specNameAry = new Array();
+			
+			//populating spaces in specNameAry
+			for(item in stageArray)
+				specNameAry.push("");
+			//loop through reservation table
+			for(row in table)
+			{
+				//alert(day + '#' + table[row].date_reserved_from + '#' + table[row].date_reserved_to);
+				var dateFrom = new Date(table[row].date_reserved_from);
+				var dateTo = new Date(table[row].date_reserved_to);
+				
+				//current day is within stage reserved period
+				if(day >= dateFrom && day <= dateTo)
+				{
+					//find stage name in stageArry, use index to add spec name to ary
+					for(var stageIndex = 0; stageIndex < stageArray.length; stageIndex++)
+					{
+						if(table[row].stage_name.toLowerCase() == stageArray[stageIndex].toLowerCase())
+							//specNameAry[stageIndex] = table[row].spec_name ;
+							specNameAry[stageIndex] = table[row].spec_id ;
+					}
+					//ary.push(table[row].stage_name);
+				}
+			}
+
+			//push content from specNameAry into ary
+			for(idx = 0; idx <  specNameAry.length; idx++)
+				ary.push( specNameAry[idx] );
+			
+			addRow2(ary)
 		}
+		
+		//while(objDateFrom < objDateTo)
+		//{
+		//	alert(objDateFrom.getDate());
+		//	ary = new Array(date, objDateFrom.getDate(), "pro1", "pro2", "pro3", "pro4", "pro5", "pro6");
+		//	addRow2(ary)
+		//	objDateFrom.setDate(objDateFrom.getDate()+1);
+		//}
+		
+		//need to add a check that date is not null
+		
+		//ary = new Array(date, "day", "pro1", "pro2", "pro3", "pro4", "pro5", "pro6");
+		
+		//addRow2(ary)
+		//for(row in table)
+		//{
+		//	addRow2(table[row])
+		//}
 		
 	});
 }
@@ -78,7 +137,7 @@ function getTableDataOriginal()
 }
 
 
-function createTable()
+function createTable(stageHeadings)
 {
 
 	if (!document.getElementsByTagName) return;
@@ -89,19 +148,41 @@ function createTable()
 	table.setAttribute('border','2');
 	table.setAttribute('class','reservationTable');
 	
+	alert(stageHeadings);
+	
 	//test array to allow creating table with headings from array
-	var headings = new Array("Date From", "Date To", "Stage", "Spec Name", "Spec ID", "Reservation Date");
+	//var headings = new Array("Date From", "Date To", "Stage", "Spec Name", "Spec ID", "Reservation Date");
 	
-	rowHTML = '';	
-	for(title in headings)
-		rowHTML = rowHTML + '<th>' + headings[title] + '</th>';
 	
-	table.innerHTML = '<tbody><tr>' + rowHTML + '</tr></tbody>';
-	tableDiv.appendChild(table);
+	$.getJSON('http://saran93.zxq.net/displayStage.php', function(stages) {
+		
+		headings = new Array("Date", "Day");
+		stageArray = new Array();
+		
+		for(stage in stages)
+		{
+			headings.push(stages[stage].name);
+			stageArray.push(stages[stage].name);
+		}
+		
+		rowHTML = '';	
+		for(title in headings)
+			rowHTML = rowHTML + '<th>' + headings[title] + '</th>';
+		
+		table.innerHTML = '<tbody><tr>' + rowHTML + '</tr></tbody>';
+		tableDiv.appendChild(table);
+		
+		populateTable(stageArray);		
+	});
 	
-	getTableData();
+	
 }
 
+function date()
+{
+	var objDate = new Date("10/11/2009");
+	alert(objDate.toString("MMMM"));
+}
 
 
 </script>
@@ -126,11 +207,13 @@ function createTable()
 <div class="tableDiv"></div>
 
 
-<button onClick='createTable();return false;'>
+<button onClick='createTable(["STAGE1", "STAGE11", "STAGE111", "STAGE1111", "STAGE111111", "STAGE1111111"]);return false;'>
 create table</button>
 
 </br>
 
+<button onClick='date();return false;'>
+date test</button>
 
 </body> 
 </html>
