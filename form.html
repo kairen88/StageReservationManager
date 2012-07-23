@@ -87,34 +87,6 @@
 			loadSpecId()
 		}
 		
-		function validate()
-		{
-		
-		alert("Validation in progress...");
-		
-        var new_from_date=document.forms['sample']['dateFrom'].value;
-		var new_to_date=document.forms['sample']['dateTo'].value;
-		var stage=document.forms['sample']['stageName'].value;
-		$.getJSON('http://saran93.zxq.net/display.php', function(table){
-		for(row in table)
-		{
-		if( table[row].status=='R' && table[row].stage_name==stage && (
-		(table[row].date_reserved_from>=new_from_date && table[row].date_reserved_to<=new_to_date) ||
-		(table[row].date_reserved_from>=new_from_date && table[row].date_reserved_to>=new_to_date) ||
-		(table[row].date_reserved_from<=new_from_date && table[row].date_reserved_to<=new_to_date) ||
-		(table[row].date_reserved_from<new_from_date && table[row].date_reserved_to>new_to_date) ))
-			{
-			alert("WARNING!!! \nYou are attempting to overwrite an already existing reservation.\n Details : \n Stage : "+table[row].stage_name+" \n Reservation period : "+table[row].date_reserved_from +" to " +table[row].date_reserved_to +" \n \tDo you still wish to proceed?");
-			
-			}
-			
-		
-		}
-		
-		
-		});
-		}
-		
 		window.onload = init;
     </script>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
@@ -128,7 +100,7 @@
 <a href="admin.html"> <h3>Admin Login</h3> </a>
 
 
-	  <form name="sample">
+	  <form action="/reserve.php" method="post">
     <ol class="forms">
         
         <li>
@@ -169,7 +141,7 @@
     </ol>
     <ol class="forms">
       <li class="buttons submit">
-        <button onClick='validate();return false;' name="btnRegister">Submit </button>
+        <button type="submit" name="btnRegister">Submit </button>
       </li>
     </ol>
       </form>
