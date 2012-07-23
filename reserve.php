@@ -25,7 +25,8 @@ $spec_name  =    $_POST['specName'];
 if(isset($_POST['btnRegister'])) 
 {
 					$q1= " SELECT * FROM stageReservation 
-					WHERE stage_name='$stage_name' AND(
+					WHERE stage_name='$stage_name' AND status='R'
+												   AND(
 															(date_reserved_from>='$date_reserved_from' AND date_reserved_to<='$date_reserved_to')
 													   OR   (date_reserved_from>='$date_reserved_from' AND date_reserved_to>='$date_reserved_to') 
 													   OR    (date_reserved_from<='$date_reserved_from' AND date_reserved_to<='$date_reserved_to')
@@ -43,34 +44,92 @@ if(isset($_POST['btnRegister']))
 												$s_id=$row['spec_id'];
 												$old_from=$row['date_reserved_from'];
 												$old_to=$row['date_reserved_to'];
-												
-												echo $old_from;
-												echo"<br/>";
+											
 												
 												$from_date=$date_reserved_from;
 												$to_date=$date_reserved_to;
 												
 												if ($old_from<$date_reserved_from && $old_to>$date_reserved_to )
 												{
-												$from_date=$date_reserved_from;
-												$to_date=$date_reserved_to;
+																$from_date=$date_reserved_from;
+																$to_date=$date_reserved_to;
+																
+																$new_date=date("Y-m-d",strtotime("-1 day", strtotime($date_reserved_from )));
+																echo "<br/>";
+																echo "NEW DATE : $new_date";
+																$querynew1    =    "INSERT INTO stageReservation(date_reserved,date_reserved_from,date_reserved_to,stage_name,spec_id,spec_name,status)
+																					VALUES(DATE(NOW()),'$old_from','$new_date','$stage_name','$spec_id','$spec_name','R')";
+																$resnew1    =    mysql_query($querynew1);
+																if($resnew1)
+																{
+																	echo "<br />";
+																	echo "Case1.1 executed successfully.<br />";
+																	echo "<br />";
+																}
+																
+																$new_date=date("Y-m-d", strtotime("+1 day", strtotime($date_reserved_to)));
+																echo "<br/>";
+																echo "NEW DATE : $new_date";
+																$querynew2    =    "INSERT INTO stageReservation(date_reserved,date_reserved_from,date_reserved_to,stage_name,spec_id,spec_name,status)
+																					VALUES(DATE(NOW()),'$new_date','$old_to','$stage_name','$spec_id','$spec_name','R')";
+																$resnew2    =    mysql_query($querynew2);
+																if($resnew2)
+																{
+																	echo "<br />";
+																	echo "Case1.2 executed successfully.<br />";
+																	echo "<br />";
+																}
+																
+											    
+												
 												}
 												else if($old_from>=$date_reserved_from && $old_to<=$date_reserved_to ) 
 												{
-												 $from_date=$old_from;
-												 $to_date=$old_to;
+														 $from_date=$old_from;
+														 $to_date=$old_to;
 												}
 
 												else if ($old_from>=$date_reserved_from && $old_to>=$date_reserved_to )
 												{
-													$from_date=$old_from;
+																	$from_date=$old_from;
+																	$new_date=date("Y-m-d", strtotime("+1 day", strtotime($date_reserved_to)));
+																	$querynew3    =    "INSERT INTO stageReservation(date_reserved,date_reserved_from,date_reserved_to,stage_name,spec_id,spec_name,status)
+																					VALUES(DATE(NOW()),'$new_date','$old_to','$stage_name','$spec_id','$spec_name','R')";
+																$resnew3    =    mysql_query($querynew3);
+																if($resnew3)
+																{
+																	echo "<br />";
+																	echo "Case3 executed successfully.<br />";
+																	echo "<br />";
+																}
 													
 												}
 												else if ($old_from<=$date_reserved_from && $old_to<=$date_reserved_to )
 												{
-													$to_date=$old_to;
+												
+																$to_date=$old_to;
+															$new_date=date("Y-m-d", strtotime("-1 day", strtotime($date_reserved_from )));	
+															$querynew4    =    "INSERT INTO stageReservation(date_reserved,date_reserved_from,date_reserved_to,stage_name,spec_id,spec_name,status)
+																				VALUES(DATE(NOW()),'$old_from','$new_date','$stage_name','$spec_id','$spec_name','R')";
+															$resnew4    =    mysql_query($querynew4);
+															if($resnew4)
+															{
+																echo "<br />";
+																echo "Case4 executed successfully.<br />";
+																echo "<br />";
+															}
 													
 												}
+												
+												$query_old = "UPDATE stageReservation SET status='O' WHERE reservation_id='$r_id'";
+												$res_old    =    mysql_query($query_old);
+															if($res_old)
+															{
+																echo "<br />";
+																echo "Status updated to O successfully.<br />";
+																echo "<br />";
+															}
+												
 												// echo $s_id;
 												// echo "<br />";
 												// echo "  Stage to be deleted: \n $r_id  " ;
@@ -120,11 +179,11 @@ if(isset($_POST['btnRegister']))
 					// $res4    =    mysql_query($q4);
 					// $num= mysql_num_rows($res4);
 					
+					
 
 
-
-					$query    =    "INSERT INTO stageReservation(date_reserved,date_reserved_from,date_reserved_to,stage_name,spec_id,spec_name)
-										   VALUES(DATE(NOW()),'$date_reserved_from','$date_reserved_to','$stage_name','$spec_id','$spec_name')";
+					$query    =    "INSERT INTO stageReservation(date_reserved,date_reserved_from,date_reserved_to,stage_name,spec_id,spec_name,status)
+										   VALUES(DATE(NOW()),'$date_reserved_from','$date_reserved_to','$stage_name','$spec_id','$spec_name','R')";
 					$res    =    mysql_query($query);
 					if($res)
 					{

@@ -18,35 +18,124 @@
  
     <script type="text/javascript">
         dojo.require("dijit.form.DateTextBox");
+		
+		function loadStageNameSelector()
+		{
+			$.getJSON('http://saran93.zxq.net/displayStage.php', function(stages) {
+
+			stageNameSelector = document.getElementById("stageNameSelector");
+			
+			idx = 1;
+			for(stage in stages)
+				{
+					stageOption = new Option;
+					stageOption.text = stages[stage].name;
+					stageOption.value = stages[stage].name;
+					stageNameSelector.options[idx] = (stageOption);
+					idx ++;
+				}
+
+			});
+		}
+		
+		function loadSpecId()
+		{
+			$.getJSON('http://saran93.zxq.net/specDropDown.php', function(specDetails) {
+	
+		specID = new Array();
+		specName = new Array();
+		
+		for(spec in specDetails)
+		{
+			specID.push(specDetails[spec].spec_id);
+			specName.push(specDetails[spec].spec_name);
+		}
+		
+	
+		ary = new Array("c++", "java", "php", "coldfusion", "javascript", "asp", "ruby");
+		$(document).ready(function() {
+			$("input#specName").autocomplete({
+			source: specName,
+			
+			select: function( event, ui ) {
+				for(spec in specDetails)
+					if(ui.item.value == specDetails[spec].spec_name)
+						$("input#specId").val(specDetails[spec].spec_id);
+			}
+			
+			});
+			
+			$("input#specId").autocomplete({
+			source: specID,
+			
+			select: function( event, ui ) {
+				for(spec in specDetails)
+					if(ui.item.value == specDetails[spec].spec_id)
+						$("input#specName").val(specDetails[spec].spec_name);
+			}
+			
+			
+			});
+		});
+	
+	});
+		}
+		
+		function init()
+		{
+			loadStageNameSelector()
+			loadSpecId()
+		}
+		
+		function validate()
+		{
+		
+		alert("Validation in progress...");
+		
+        var new_from_date=document.forms['sample']['dateFrom'].value;
+		var new_to_date=document.forms['sample']['dateTo'].value;
+		var stage=document.forms['sample']['stageName'].value;
+		$.getJSON('http://saran93.zxq.net/display.php', function(table){
+		for(row in table)
+		{
+		if( table[row].status=='R' && table[row].stage_name==stage && (
+		(table[row].date_reserved_from>=new_from_date && table[row].date_reserved_to<=new_to_date) ||
+		(table[row].date_reserved_from>=new_from_date && table[row].date_reserved_to>=new_to_date) ||
+		(table[row].date_reserved_from<=new_from_date && table[row].date_reserved_to<=new_to_date) ||
+		(table[row].date_reserved_from<new_from_date && table[row].date_reserved_to>new_to_date) ))
+			{
+			alert("WARNING!!! \nYou are attempting to overwrite an already existing reservation.\n Details : \n Stage : "+table[row].stage_name+" \n Reservation period : "+table[row].date_reserved_from +" to " +table[row].date_reserved_to +" \n \tDo you still wish to proceed?");
+			
+			}
+			
+		
+		}
+		
+		
+		});
+		}
+		
+		window.onload = init;
     </script>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
-
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+  
 </head> 
 
 <body> 
 <a href="admin.html"> <h3>Admin Login</h3> </a>
 
 
-	  <form action="/reserve.php" method="post">
+	  <form name="sample">
     <ol class="forms">
         
         <li>
           <label for="name"><em class="required">*</em> Stage Name</label>
-          <select name="stageName">
-  <option value="">Select...</option>
-  <option value="STAGE2VM4236">4236</option>
-  <option value="STAGE2VM4237">4237</option>
-  <option value="STAGE2VM4238">4238</option>
-  <option value="STAGE2VM4239">4239</option>
-  <option value="STAGE2VM4240">4240</option>
-  <option value="STAGE2VM4241">4242</option>
-  <option value="STAGE2VM4243">4243</option>
-  <option value="STAGE2VM4244">4244</option>
-  <option value="STAGE2VM4245">4245</option>
-  <option value="STAGE2VM4246">4246</option>
-  <option value="STAGE2VM4247">4247</option>
-		 
-</select>
+          <select name="stageName" id="stageNameSelector">
+			<option value="">Select...</option>
+		  </select>
         </li>
 		
 		<li>
@@ -80,7 +169,7 @@
     </ol>
     <ol class="forms">
       <li class="buttons submit">
-        <button type="submit" name="btnRegister">Submit </button>
+        <button onClick='validate();return false;' name="btnRegister">Submit </button>
       </li>
     </ol>
       </form>
