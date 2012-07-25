@@ -1,8 +1,8 @@
 <?php
 //===============Server Configuration============
-$mysql_host = "mysql4.000webhost.com";
-$mysql_database = "a4670404_ppstage";
-$mysql_user = "a4670404_kairen";
+$mysql_host = "localhost.zymic.com";
+$mysql_database = "saran93_zxq_ppstage";
+$mysql_user = "760379_ppuser";
 $mysql_password = "password123";
 //Establish Connection with Server
 $conn        =    mysql_connect($mysql_host,$mysql_user,$mysql_password) or die('Server Information is not Correct'); 

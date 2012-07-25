@@ -22,7 +22,7 @@ $date_reserved_to  =    $_POST['dateTo'];
 $stage_name =    $_POST['stageName'];
 $spec_id   =    $_POST['specId'];
 $spec_name  =    $_POST['specName'];
-if(isset($_POST['btnRegister'])) 
+if(isset($_POST['stageName'])) 
 {
 					$q1= " SELECT * FROM stageReservation 
 					WHERE stage_name='$stage_name' AND status='R'
@@ -187,9 +187,9 @@ if(isset($_POST['btnRegister']))
 					$res    =    mysql_query($query);
 					if($res)
 					{
-						echo "<br />";
-						echo "Stage registered successfully.<br />";
-						echo "<a href=\"display.php\">Click here to proceed</a>"; 
+						//echo "<br />";
+						echo "Stage registered successfully.";
+						//echo "<a href=\"display.php\">Click here to proceed</a>"; 
 					}
 
 }
