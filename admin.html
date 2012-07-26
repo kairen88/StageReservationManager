@@ -1,15 +1,45 @@
 <html>
+<head>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/validate.js"></script>
+<link href="css/styles.css"rel="stylesheet" type="text/css" media="screen" >
+<link href="css/validate.css" type="text/css" rel="stylesheet" media="screen,projection" />
+<link type="text/css" href="css/ui-lightness/jquery-ui-1.8.21.custom.css" rel="stylesheet" />
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.21.custom.min.js"></script>
+
+</head>
+
 <body>
-<form id='login' action='login.php' method='post' accept-charset='UTF-8'>
-<fieldset >
-<legend>Login</legend>
-<input type='hidden' name='submitted' id='submitted' value='1'/>
-<label for='username' >UserName*:</label>
-<input type='text' name='username' id='username'  maxlength="50" />
-<label for='password' >Password*:</label>
-<input type='password' name='password' id='password' maxlength="50" />
+  <form name="sample2" id="login" action="login.php" method="post">
+    <ol class="forms">
+
+		<li>
+		 <label for="name"><em class="required">*</em>	Login: </label>
+		</li>
+		
+		<li>
+		<label for="username"><em class="required">*</em>Username:</label>
+		<input type="text" id="username" name="username" required="true">
+		</li>
+		
+		<li>
+		<label for="password"><em class="required">*</em>Password:</label>
+		<input type="password" id="password" name="password" required="true">
+		</li>
+		
+	</ol>
+
+    <ol class="forms">
+      <li class="buttons submit">
 <input type='submit' name='Submit' value='Submit' />
-</fieldset>
+		
+      </li>
+    </ol>
+	
+
+
+
 </form>
 </body>
 </html>

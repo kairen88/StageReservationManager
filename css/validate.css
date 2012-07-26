@@ -1,0 +1,11 @@
+.forms li {
+  overflow: hidden;
+  list-style-type:none;
+}
+
+
+em.error {
+  clear: both; display: block;
+  font-size: 12px; font-style:italic; color: #f00;
+  margin: -10px 0 10px 175px;
+}
