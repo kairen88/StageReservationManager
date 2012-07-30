@@ -1,34 +1,36 @@
+		function loadDatePicker()
+		{
+			$(function() {
+				$( "#datepicker" ).datepicker({
+					showOn: "both",
+					buttonImage: "images/calendar.gif",
+					buttonImageOnly: true,
+					dateFormat: "yy-mm-dd",
+					onSelect: function(dateText, inst) {
+					$( "#datepicker2" ).datepicker( "setDate" , $('#datepicker').val() );
+					}
+				});
+			});
 
 			$(function() {
-		$( "#datepicker" ).datepicker({
-			showOn: "both",
-			buttonImage: "images/calendar.gif",
-			buttonImageOnly: true,
-			dateFormat: "yy-mm-dd",
-			onSelect: function(dateText, inst) {
-			$( "#datepicker2" ).datepicker( "setDate" , $('#datepicker').val() );
-			}
-		});
-	});
-
-	$(function() {
-	 date2=new Date($('#datepicker').val());
-		$( "#datepicker2" ).datepicker({
-			showOn: "both",
-			buttonImage: "images/calendar.gif",
-			buttonImageOnly: true,
-			dateFormat: "yy-mm-dd",
-		});
+			 date2=new Date($('#datepicker').val());
+				$( "#datepicker2" ).datepicker({
+					showOn: "both",
+					buttonImage: "images/calendar.gif",
+					buttonImageOnly: true,
+					dateFormat: "yy-mm-dd",
+				});
 
 
-	});
+			});
+		}
 		
 		
 		
 		function loadStageNameSelector()
 		{
-			$.getJSON('http://saran93.zxq.net/displayStage.php', function(stages) {
-
+			$.getJSON('displayStage.php', function(stages) {
+			
 			stageNameSelector = document.getElementById("stageNameSelector");
 			
 			idx = 1;
@@ -46,7 +48,7 @@
 		
 		function loadSpecId()
 		{
-			$.getJSON('http://saran93.zxq.net/specDropDown.php', function(specDetails) {
+			$.getJSON('specDropDown.php', function(specDetails) {
 	
 		specID = new Array();
 		specName = new Array();
@@ -58,7 +60,7 @@
 		}
 		
 	
-		ary = new Array("c++", "java", "php", "coldfusion", "javascript", "asp", "ruby");
+		//ary = new Array("c++", "java", "php", "coldfusion", "javascript", "asp", "ruby");
 		$(document).ready(function() {
 			$("input#specName").autocomplete({
 			source: specName,
@@ -87,15 +89,16 @@
 	});
 		}
 		
-		function init()
-		{
-			loadStageNameSelector()
-			loadSpecId()
-		}
+	//	function init()
+	//	{
+	//		loadStageNameSelector()
+	//		loadSpecId()
+	//		loadDatePicker()
+	//	}
 		
 
 		
-		window.onload = init;
+		//window.onload = init;
 		
 		function submitForm()
 		{
@@ -117,7 +120,7 @@
 			else
 			{
 				//spec name/id validation			
-				$.getJSON('http://saran93.zxq.net/specDropDown.php', function(table)
+				$.getJSON('specDropDown.php', function(table)
 				{
 					var isSpecDetailValid=1;
 					for(row in table)
@@ -134,7 +137,7 @@
 					else
 					{
 						//existing reservation validation
-						$.getJSON('http://saran93.zxq.net/display.php', function(table)
+						$.getJSON('display.php', function(table)
 						{
 							var isOverwritten = 0;
 							for(row in table)
@@ -161,7 +164,7 @@
 								else if(confirm("Do you wish to overwrite an existing reservation?"))
 									{
 										//post reservation
-										$.ajax({type:'POST', url: 'http://saran93.zxq.net/reserve.php', data:$('#reservationForm').serialize(), success: function(response) 
+										$.ajax({type:'POST', url: 'reserve.php', data:$('#reservationForm').serialize(), success: function(response) 
 										{
 											alert(response);
 										}});
@@ -171,7 +174,7 @@
 							else
 							{
 								//post reservation
-								$.ajax({type:'POST', url: 'http://saran93.zxq.net/reserve.php', data:$('#reservationForm').serialize(), success: function(response) 
+								$.ajax({type:'POST', url: 'reserve.php', data:$('#reservationForm').serialize(), success: function(response) 
 								{
 									alert(response);
 								}});

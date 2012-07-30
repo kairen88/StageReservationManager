@@ -7,30 +7,52 @@
 
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 
-<script src="/js/date.js"></script>
+<script src="js/date.js"></script>
 
-<script src="/js/jquery-1.7.2.min"></script>
+<script src="js/jquery-1.7.2.min"></script>
 
-<script type="text/javascript" src="/js/monthpicker.min.js"></script>
+<script type="text/javascript" src="js/monthpicker.min.js"></script>
 
-<script type="text/javascript" src="/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui.min.js"></script>
 
-<script type="text/javascript" src="/js/ui.multiselect.js"></script>
+<script type="text/javascript" src="js/ui.multiselect.js"></script>
 
-<script type="text/javascript" src="/js/i18n/grid.locale-en.js"></script>
+<script type="text/javascript" src="js/i18n/grid.locale-en.js"></script>
 
-<script type="text/javascript" src="/js/jquery.jqGrid.min.js"></script> 
+<script type="text/javascript" src="js/jquery.jqGrid.min.js"></script> 
+
+<script type="text/javascript" src="js/jquery-ui-1.8.21.custom.min.js"></script> 
+
+<script type="text/javascript" src="js/form.js"></script>  
+
+<script type="text/javascript" src="js/jquery-ui.min.js"></script>
 
 
-<link rel="stylesheet" type="text/css" media="screen" href="/css/ui-lightness/jquery-ui-1.8.21.custom.css" />
 
-<link rel="stylesheet" type="text/css" href="/cs/ui-lightness/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="css/ui.multiselect.css" />
 
-<link rel="stylesheet" type="text/css" href="/css/ui.jqgrid.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="css/ui-lightness/jquery-ui-1.8.21.custom.css" />
 
-<link rel="stylesheet" type="text/css" href="/css/ui.multiselect.css" />
+<link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui.css" />
 
-<link rel="stylesheet" href="/css/monthpicker.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="css/ui.jqgrid.css" />
+
+<link rel="stylesheet" href="css/monthpicker.css" type="text/css" charset="utf-8" />
+
+
+<link href="css/validate.css" type="text/css" rel="stylesheet" media="screen,projection" /> 
+ <link href="css/styles.css"rel="stylesheet" type="text/css" media="screen" > 
+ 
+ 
+ 
+ 
+
+    
+
+ 
+ 
+ 
+ 
 
 
 <script type="text/javascript">
@@ -55,7 +77,7 @@ function createTable(monthSelected)
 	tableDiv.appendChild(table);
 	tableDiv.appendChild(pager);
 	
-	$.getJSON('http://saran93.zxq.net/displayStage.php', function(stages) {
+	$.getJSON('http://10.238.85.62/CSRM/displayStage.php', function(stages) {
 
 		stageArray = new Array();
 		
@@ -72,7 +94,7 @@ function createTable(monthSelected)
 
 function populateTable(monthSelected, stageArray)
 {
-	$.getJSON('http://saran93.zxq.net/display.php', function(table) {
+	$.getJSON('http://10.238.85.62/CSRM/display.php', function(table) {
 
 		//need to get month to display from user
 		var objMonth = new Date(monthSelected);
@@ -237,7 +259,10 @@ function callback(data,$e){
 		str += " " + key + ": " + data[key]+ "; ";
 	}
 	
-	monthSelected = data["year"] + '-' + '0' + data["month"] + '-' + "01";
+	if(data["month"] < 10)
+		monthSelected = data["year"] + '-' + '0' + data["month"] + '-' + "01";
+	else
+		monthSelected = data["year"] + '-' + data["month"] + '-' + "01";
 	//alert(monthSelected);
 
 	if(data["year"] == '2012' && data["month"] < '7')	
@@ -270,6 +295,17 @@ function emptyDiv (divToClear){
 
 function DaysInMonth(y,m) { return new Date(y,m,0).getDate(); }
 
+function hideStageReservation()
+{
+	alert($("#stageReservationDiv").class);
+	$("#stageReservationDiv").hide('slow', function() {});
+}
+
+function stageReservationFormInIt()
+{
+
+}
+
 function tableInIt()
 {
 	current = new Date();
@@ -277,12 +313,24 @@ function tableInIt()
 	month = month + 1;
 	createTable(current.getFullYear() + '-' + '0' + month + '-' + "01")
 	
+
+}
+
+function jqTest()
+{
+	jQuery("#list4").jqGrid({ datatype: "local", height: 250, colNames:['Inv No','Date', 'Client', 'Amount','Tax','Total','Notes'], colModel:[ {name:'id',index:'id', width:60, sorttype:"int"}, {name:'invdate',index:'invdate', width:90, sorttype:"date"}, {name:'name',index:'name', width:100}, {name:'amount',index:'amount', width:80, align:"right",sorttype:"float"}, {name:'tax',index:'tax', width:80, align:"right",sorttype:"float"}, {name:'total',index:'total', width:80,align:"right",sorttype:"float"}, {name:'note',index:'note', width:150, sortable:false} ], multiselect: true, caption: "Manipulating Array Data" }); var mydata = [ {id:"1",invdate:"2007-10-01",name:"test",note:"note",amount:"200.00",tax:"10.00",total:"210.00"}, {id:"2",invdate:"2007-10-02",name:"test2",note:"note2",amount:"300.00",tax:"20.00",total:"320.00"}, {id:"3",invdate:"2007-09-01",name:"test3",note:"note3",amount:"400.00",tax:"30.00",total:"430.00"}, {id:"4",invdate:"2007-10-04",name:"test",note:"note",amount:"200.00",tax:"10.00",total:"210.00"}, {id:"5",invdate:"2007-10-05",name:"test2",note:"note2",amount:"300.00",tax:"20.00",total:"320.00"}, {id:"6",invdate:"2007-09-06",name:"test3",note:"note3",amount:"400.00",tax:"30.00",total:"430.00"}, {id:"7",invdate:"2007-10-04",name:"test",note:"note",amount:"200.00",tax:"10.00",total:"210.00"}, {id:"8",invdate:"2007-10-03",name:"test2",note:"note2",amount:"300.00",tax:"20.00",total:"320.00"}, {id:"9",invdate:"2007-09-01",name:"test3",note:"note3",amount:"400.00",tax:"30.00",total:"430.00"} ]; for(var i=0;i<=mydata.length;i++) jQuery("#list4").jqGrid('addRowData',i+1,mydata[i]);
 }
 
 function init()
 		{
+			jqTest() //to test if JqGrid table is working
 			loadMonthBar()
 			tableInIt()
+			
+			//load init from form.js
+			loadStageNameSelector()
+			loadSpecId()
+			loadDatePicker()
 		}
 		
 window.onload = init;
@@ -293,12 +341,66 @@ window.onload = init;
 
 <body> 
 
+<!-- <button id="hideStageRevButton" onClick="hideStageReservation()" name="hideStageRevButton">Stage Reservation </button> -->
 
+<div id="stageReservationDiv" class="hidden">
+	  <form name="sample" id="reservationForm" action="/reserve.php" method="post">
+    <ol class="forms">
+        
+        <li>
+          <label for="name"><em class="required">*</em> Stage Name</label>
+          <select name="stageName" id="stageNameSelector">
+			<option value="">Select...</option>
+		  </select>
+        </li>
+		
+		<li>
+		 <label for="name"><em class="required">*</em>	Reservation period : </label>
+		</li>
+		
+		<li>
+		<label for="dateFrom"><em class="required">*</em>From:</label>
+		<input type="text" id="datepicker" name="dateFrom" required="true">
+		</li>
+		
+		
+		<li>
+		<label for="dateTo"><em class="required">*</em>To:</label>
+		<input type="text" id="datepicker2" name="dateTo" required="true" >
+		</li>
+		
+		<li>
+          <label for="specId"><em class="required">*</em>specId</label>
+          <input type="text" name="specId" id="specId" />
+        </li>
+		
+        <li>
+          <label for="specName"><em class="required">*</em>specName</label>
+          <input type="text" name="specName" id="specName" />
+        </li>
+
+
+    </ol>
+
+      </form>
+	  
+	  <button id="btnRegister2" onClick="submitForm()" name="btnRegister2">Submit </button>
+</div>
+	  
+
+	  
+	  
+	  
+	  
+	  
+	  
 <div align="center">
 <div class="MonthPicker" id="MonthPicker" style="width:780px;" title="Month Picker" align="center"></div>
 <div id="table" align="center" ></div>
-<div>
+<div>	  
 
-
+<table id="list4"></table>
+	  
 </body> 
+</html></body> 
 </html>
