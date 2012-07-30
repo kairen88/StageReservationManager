@@ -5,173 +5,99 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
 <title>Stage Reservation App</title> 
 
-<script src="http://code.jquery.com/jquery-latest.js"></script>
-<script src="http://saran93.zxq.net/lib/date.js"></script>
-<script type="text/javascript" src="http://saran93.zxq.net/lib/monthpicker.min.js"></script>
+<script src="js/jquery-latest.js"></script>
+
+<script src="js/date.js"></script>
+
+<!-- <script src="js/jquery-1.7.2.min.js"></script> -->
+
+<script type="text/javascript" src="js/monthpicker.min.js"></script>
+
+<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+
+<script type="text/javascript" src="js/ui.multiselect.js"></script>
+
+<script type="text/javascript" src="js/i18n/grid.locale-en.js"></script>
+
+<script type="text/javascript" src="js/jquery.jqGrid.min.js"></script> 
+
+<script type="text/javascript" src="js/jquery-ui-1.8.21.custom.min.js"></script> 
+
+<script type="text/javascript" src="js/form.js"></script>  
+
+<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+
+  <!-- noty -->
+  <script type="text/javascript" src="js/noty/jquery.noty.js"></script>
+  
+  <!-- layouts -->
+
+  <script type="text/javascript" src="js/noty/layouts/center.js"></script>
+
+
+  <!-- themes -->
+  <script type="text/javascript" src="js/noty/themes/default.js"></script>
+
+
+
+<link rel="stylesheet" type="text/css" href="css/ui.multiselect.css" />
+
+<link rel="stylesheet" type="text/css" media="screen" href="css/ui-lightness/jquery-ui-1.8.21.custom.css" />
+
+<link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui.css" />
+
+<link rel="stylesheet" type="text/css" href="css/ui.jqgrid.css" />
+
+<link rel="stylesheet" href="css/monthpicker.css" type="text/css" charset="utf-8" />
+
+
+<link href="css/validate.css" type="text/css" rel="stylesheet" media="screen,projection" /> 
+ <link href="css/styles.css"rel="stylesheet" type="text/css" media="screen" > 
+ 
+    <link rel="stylesheet" type="text/css" href="css/buttons.css"/>
+	
+	   <link rel="stylesheet" type="text/css" href="css/buttons.css"/>
+ 
+ 
+ 
+
 <script type="text/javascript">
-
-function addRowOld(dateFrom,dateTo, stageId, specName, specId, dateReserved)
-{
-
-         if (!document.getElementsByTagName) return;
-         tabBody=document.getElementsByClassName("reservationTable").item(0);
-         row=document.createElement("TR");
-		 
-		 row.innerHTML = '<td>' + dateFrom + '</td>'
-							+ '<td>' + dateTo + '</td>'
-							+ '<td>' + stageId + '</td>'
-							+ '<td>' + specName + '</td>'
-							+ '<td>' + specId + '</td>'
-							+ '<td>' + dateReserved + '</td>';		          
-		 
-         tabBody.appendChild(row);
-}
-
-function addRow(row)
-{
-
-         if (!document.getElementsByTagName) return;
-         tabBody= document.getElementById("reservationTable");
-		 //alert(tabBody);
-         rowElement=document.createElement("tr");
-
-		 
-		 rowHTML = '';
-		 for(field in row)
-		 {
-			//if(row[field].hasOwnProperty(field))
-				if(row[field] != row.reservation_id)
-					rowHTML = rowHTML + '<td>' + row[field] + '</td>'
-			
-		 }
-		 
-		 rowElement.innerHTML = rowHTML;		 	          
-		 
-         tabBody.appendChild(rowElement);
-}
-
-function populateTable(monthSelected, stageArray)
-{
-	$.getJSON('http://saran93.zxq.net/display.php', function(table) {
-
-		//need to get month to display from user
-		var objMonth = new Date(monthSelected);
-		var objMonthEnd = new Date(monthSelected);
-		//daysInMonth = Date.getDaysInMonth(objMonth.getFullYear(), objMonth.getMonth());
-		daysPerMonth = DaysInMonth(objMonth.getFullYear(), objMonth.getMonth());
-		
-		objMonthEnd.setDate(objMonthEnd.getDate()+ daysPerMonth);
-		
-		//alert(stageArray);alert(daysPerMonth);
-		
-		//for(idx = 1; idx <= daysPerMonth; idx++ )
-		for(var day = objMonth; day < objMonthEnd; day.setDate(day.getDate()+1) )
-		{
-			ary = new Array(objMonth.toString("MMMM"), day.getDate());
-			specNameAry = new Array();
-			
-			
-			
-			//populating spaces in specNameAry
-			for(item in stageArray)
-				specNameAry.push("");
-			//loop through reservation table
-			for(row in table)
-			{
-				//alert(day + '#' + table[row].date_reserved_from + '#' + table[row].date_reserved_to);
-				var dateFrom = new Date(table[row].date_reserved_from);
-				var dateTo = new Date(table[row].date_reserved_to);
-				
-				//current day is within stage reserved period
-				if(day >= dateFrom && day <= dateTo)
-				{
-					//find stage name in stageArry, use index to add spec name to ary
-					for(var stageIndex = 0; stageIndex < stageArray.length; stageIndex++)
-					{
-						if(table[row].stage_name.toLowerCase() == stageArray[stageIndex].toLowerCase())
-							//specNameAry[stageIndex] = table[row].spec_name ;
-							specNameAry[stageIndex] = table[row].spec_id ;
-					}
-					//ary.push(table[row].stage_name);
-				}
-			}
-
-			//push content from specNameAry into ary
-			for(idx = 0; idx <  specNameAry.length; idx++)
-				ary.push( specNameAry[idx] );
-			
-			addRow(ary)
-		}
-		
-		//while(objDateFrom < objDateTo)
-		//{
-		//	alert(objDateFrom.getDate());
-		//	ary = new Array(date, objDateFrom.getDate(), "pro1", "pro2", "pro3", "pro4", "pro5", "pro6");
-		//	addRow2(ary)
-		//	objDateFrom.setDate(objDateFrom.getDate()+1);
-		//}
-		
-		//need to add a check that date is not null
-		
-		//ary = new Array(date, "day", "pro1", "pro2", "pro3", "pro4", "pro5", "pro6");
-		
-		//addRow2(ary)
-		//for(row in table)
-		//{
-		//	addRow2(table[row])
-		//}
-		
-	});
-}
-
-function getTableDataOriginal()
-{
-	$.getJSON('http://saran93.zxq.net/display.php', function(table) {
-		alert(table.length); //this should alert 'value1'
-		
-		for(row in table)
-		{
-			addRow(table[row].date_reserved_from, table[row].date_reserved_to, table[row].stage_name, table[row].spec_name, table[row].spec_id, table[row].date_reserved)
-		}
-		
-	});
-}
-
 
 function createTable(monthSelected)
 {
 
 	if (!document.getElementsByTagName) return;
 
-	tableDiv=document.getElementById("tableDiv");
-	//alert(tableDiv);
-	table = document.createElement("table");
-	//table = createElement("table");
 	
-	table.setAttribute('border','2');
-	table.setAttribute('id','reservationTable');
-	
+
+	tableDiv=document.getElementById("table");
 	//clear the div
 	emptyDiv(tableDiv)
 	
+	//insert loading gif
+	loadingGif = document.createElement("img");
+	loadingGif.setAttribute('id','loadingGif');
+	loadingGif.setAttribute('style','margin-top: 20%;');
+	loadingGif.setAttribute('src','images/loadingGif.gif');
 	
-	$.getJSON('http://saran93.zxq.net/displayStage.php', function(stages) {
-		
-		headings = new Array("Date", "Day");
+	table = document.createElement("table");
+	table.setAttribute('id','reservationList');
+	
+	pager = document.createElement("div");
+	pager.setAttribute('id','pager');
+	
+	tableDiv.appendChild(loadingGif);
+	tableDiv.appendChild(table);
+	tableDiv.appendChild(pager);
+	
+	$.getJSON('displayStage.php', function(stages) {
+
 		stageArray = new Array();
 		
 		for(stage in stages)
 		{
-			headings.push(stages[stage].name);
 			stageArray.push(stages[stage].name);
 		}
-		
-		rowHTML = '';	
-		for(title in headings)
-			rowHTML = rowHTML + '<th>' + headings[title] + '</th>';
-		
-		table.innerHTML = '<tbody><tr>' + rowHTML + '</tr></tbody>';
-		tableDiv.appendChild(table);
 		
 		populateTable(monthSelected, stageArray);		
 	});
@@ -179,20 +105,172 @@ function createTable(monthSelected)
 	
 }
 
-function date()
+function populateTable(monthSelected, stageArray)
 {
-	var objDate = new Date("10/11/2009");
-	alert(objDate.toString("MMMM"));
+
+	$.getJSON('display.php', function(table) {
+
+		//need to get month to display from user
+		var objMonth = new Date(monthSelected);
+		var objMonthEnd = new Date(monthSelected);
+		
+		daysPerMonth = DaysInMonth(objMonth.getFullYear(), objMonth.getMonth()+1);//month starts from 0		
+		objMonthEnd.setDate(objMonthEnd.getDate()+ daysPerMonth);
+		
+		tableData = new Array();
+		
+		for(var day = objMonth; day < objMonthEnd; day.setDate(day.getDate()+1) )
+		{
+			ary = {};
+			ary["month"] = objMonth.toString("MMMM");
+			ary["day"] = day.getDate();
+			specNameAry = new Array();	
+			
+			//loop through reservation table
+			for(row in table)
+			{
+				var dateFrom = new Date(table[row].date_reserved_from);
+				var dateTo = new Date(table[row].date_reserved_to);
+				
+				//need to check if status is R or U
+				if(table[row].status == "R");
+				{
+					//current day is within stage reserved period
+					if(day >= dateFrom && day <= dateTo)
+					{
+						ary[table[row].stage_name.toString()] = table[row].spec_id + '\n' + table[row].spec_name;
+					}else
+					{
+						ary[table[row].stage_name.toString()] = "" ;
+					}	
+				}
+			}
+
+			tableData.push(ary);
+		}	
+			
+			//creating table
+			//creating table attributes
+			colmodelAry = new Array();	
+			colnames = new Array();
+
+			//creating month and day column models
+			monthModel = new createColModelObj("month", "center");
+			dayModel = new createColModelObj("day", "center");
+			colnames.push("Month", "Day");
+			
+			colmodelAry.push(monthModel);
+			colmodelAry.push(dayModel);
+	
+			//populating table attributes
+			for(stage in stageArray)
+			{
+				model = new createColModelObj(stageArray[stage], "center");
+				colmodelAry.push(model);
+				colnames.push(stageArray[stage]);
+			}
+			
+			//hide loading gif
+			$("#loadingGif").hide('slow');
+			
+			loadTable(colnames, colmodelAry, tableData)	
+			
+	});
 }
 
+function loadTable(colnames, colmodel, tableData)
+{
+
+var mydata = tableData,
+
+                grid = $("#reservationList");
 
 
 
-$(function(){		
+            grid.jqGrid({
 
-		$("#example_2").monthpicker("2012-12",callback);		
+				rowNum:31,
+				
+                datatype:'local',
+
+                colNames:colnames,
+
+                colModel:colmodel,
+
+                pager: '#pager',
+
+                viewrecords: true,
+				
+				autowidth: true,
+shrinkToFit: true,
+
+                caption:'Stage Reservation List',
+				
+                height: '100%'
+
+            });
+
+            grid.jqGrid ('navGrid', '#pager',
+
+                         {edit:false, add:false, del:false, refresh:true, view:false},
+
+                         {},{},{},{multipleSearch:true,overlay:false});
+
+            grid.jqGrid ('navButtonAdd', '#pager',
+
+                         {
+
+                             caption: "", buttonicon: "ui-icon-calculator", title: "choose columns",
+
+                             onClickButton: function() {
+
+                                 grid.jqGrid('columnChooser');
+
+                            }
+
+                         });
+			//grid.setGridWidth(780,true);
+			 
+			for(var i=0;i<=tableData.length;i++)
+				jQuery("#reservationList").jqGrid('addRowData',i+1,tableData[i]);
+}
+
+function createColModelObj(name, align)
+{
+	var colModel = {
+						name: name,
+						index: name,
+						width: 100,
+						align: align
+					}
+	return colModel				
+}
+
+function loadMonthBar()
+{
+	$(function(){		
+
+		currentYear = new Date().getFullYear();
 		
-	});
+		$("#MonthPicker").monthpicker({
+										elements: [
+											{tpl:"year",opt:{
+
+												range: "-0~4",
+												value: currentYear
+											}},
+											{tpl:"month",opt:{
+
+												value: 1
+											}}
+											
+
+										],
+										onChanged: callback
+									});		
+		
+		});
+}
 	
 function callback(data,$e){
 	var str = "";
@@ -200,12 +278,60 @@ function callback(data,$e){
 		str += " " + key + ": " + data[key]+ "; ";
 	}
 	
-	
-	
-	monthSelected = data["year"] + '-' + '0' + data["month"] + '-' + "01";
-	alert(monthSelected);
-	createTable(monthSelected);
+	if(data["month"] < 10)
+		monthSelected = data["year"] + '-' + '0' + data["month"] + '-' + "01";
+	else
+		monthSelected = data["year"] + '-' + data["month"] + '-' + "01";
+	//alert(monthSelected);
+
+	if(data["year"] == '2012' && data["month"] < '7')	
+		{
+			tableDiv=document.getElementById("table");
+			//clear the div
+			emptyDiv(tableDiv)
+			
+			msgDiv = document.createElement("div");
+			divText= document.createTextNode("No Data Avaliable For This Month");
+			msgDiv.setAttribute('id','msgDiv');
+			
+			msgDiv.appendChild(divText);
+			tableDiv.appendChild(msgDiv);
+		}
+	else
+			createTable(monthSelected);
 }
+
+function generate(type, layout) {
+  	var n = noty({
+  		text: type,
+  		type: type,
+      dismissQueue: true,
+  		layout: layout,
+  		theme: 'default',
+		
+		animation: {
+			open: {height: 'toggle'},
+			close: {height: 'toggle'},
+			easing: 'swing',
+			speed: 500 // opening & closing animation speed
+		},
+		
+      buttons: [
+        {addClass: 'btn btn-primary', text: 'Ok', onClick: function($noty) {
+            $noty.close();
+            var h = noty({dismissQueue: true, force: true, layout: layout, theme: 'default', text: 'You clicked "Ok" button', type: 'success' });
+          }
+        },
+        {addClass: 'btn btn-danger', text: 'Cancel', onClick: function($noty) {
+            $noty.close();
+            var suc = noty({dismissQueue: true, force: true, layout: layout, theme: 'default', text: 'You clicked "Cancel" button', type: 'error'});
+			$noty.close();
+          }
+        }
+      ]
+  	});
+  	console.log('html: '+n.options.id);
+  }
 
 function emptyDiv (divToClear){
 	var i;
@@ -218,39 +344,115 @@ function emptyDiv (divToClear){
 	}		
 }
 
-function createElement (elementName)
-{
-	return '<' + elementName + '></' + elementName + '>';
-}
-
 function DaysInMonth(y,m) { return new Date(y,m,0).getDate(); }
 
+function hideStageReservation()
+{
+	alert($("#stageReservationDiv").class);
+	$("#stageReservationDiv").hide('slow', function() {});
+}
+
+function stageReservationFormInIt()
+{
+
+}
+
+function tableInIt()
+{
+	current = new Date();
+	month = current.getMonth();
+	month = month + 1;
+	createTable(current.getFullYear() + '-' + '0' + month + '-' + "01")
+	
+
+}
+
+function jqTest()
+{
+	jQuery("#list4").jqGrid({ datatype: "local", height: 250, colNames:['Inv No','Date', 'Client', 'Amount','Tax','Total','Notes'], colModel:[ {name:'id',index:'id', width:60, sorttype:"int"}, {name:'invdate',index:'invdate', width:90, sorttype:"date"}, {name:'name',index:'name', width:100}, {name:'amount',index:'amount', width:80, align:"right",sorttype:"float"}, {name:'tax',index:'tax', width:80, align:"right",sorttype:"float"}, {name:'total',index:'total', width:80,align:"right",sorttype:"float"}, {name:'note',index:'note', width:150, sortable:false} ], multiselect: true, caption: "Manipulating Array Data" }); var mydata = [ {id:"1",invdate:"2007-10-01",name:"test",note:"note",amount:"200.00",tax:"10.00",total:"210.00"}, {id:"2",invdate:"2007-10-02",name:"test2",note:"note2",amount:"300.00",tax:"20.00",total:"320.00"}, {id:"3",invdate:"2007-09-01",name:"test3",note:"note3",amount:"400.00",tax:"30.00",total:"430.00"}, {id:"4",invdate:"2007-10-04",name:"test",note:"note",amount:"200.00",tax:"10.00",total:"210.00"}, {id:"5",invdate:"2007-10-05",name:"test2",note:"note2",amount:"300.00",tax:"20.00",total:"320.00"}, {id:"6",invdate:"2007-09-06",name:"test3",note:"note3",amount:"400.00",tax:"30.00",total:"430.00"}, {id:"7",invdate:"2007-10-04",name:"test",note:"note",amount:"200.00",tax:"10.00",total:"210.00"}, {id:"8",invdate:"2007-10-03",name:"test2",note:"note2",amount:"300.00",tax:"20.00",total:"320.00"}, {id:"9",invdate:"2007-09-01",name:"test3",note:"note3",amount:"400.00",tax:"30.00",total:"430.00"} ]; for(var i=0;i<=mydata.length;i++) jQuery("#list4").jqGrid('addRowData',i+1,mydata[i]);
+}
+
+function init()
+		{
+			//jqTest() //to test if JqGrid table is working
+			loadMonthBar()
+			tableInIt()
+			
+			//load init from form.js
+			loadStageNameSelector()
+			loadSpecId()
+			loadDatePicker()
+			//generate('alert', 'center');
+		}
+		
+window.onload = init;
+
 </script>
-
-<link rel="stylesheet" href="http://saran93.zxq.net/css/monthpicker.css" type="text/css" charset="utf-8" />
-
- 
-    <script type="text/javascript" src="http://o.aolcdn.com/dojo/1.0/dojo/dojo.xd.js"
-        djConfig="parseOnLoad: true"></script>
- 
-    <script type="text/javascript">
-        dojo.require("dijit.form.DateTextBox");
-    </script>
 
 </head> 
 
 <body> 
 
+<!-- <button id="hideStageRevButton" onClick="hideStageReservation()" name="hideStageRevButton">Stage Reservation </button> -->
+
+<div id="stageReservationDiv" class="hidden">
+	  <form name="sample" id="reservationForm" action="/reserve.php" method="post">
+    <ol class="forms">
+        
+        <li>
+          <label for="name"><em class="required">*</em> Stage Name</label>
+          <select name="stageName" id="stageNameSelector">
+			<option value="">Select...</option>
+		  </select>
+        </li>
+		
+		<li>
+		 <label for="name"><em class="required">*</em>	Reservation period : </label>
+		</li>
+		
+		<li>
+		<label for="dateFrom"><em class="required">*</em>From:</label>
+		<input type="text" id="datepicker" name="dateFrom" required="true">
+		</li>
+		
+		
+		<li>
+		<label for="dateTo"><em class="required">*</em>To:</label>
+		<input type="text" id="datepicker2" name="dateTo" required="true" >
+		</li>
+		
+		<li>
+          <label for="specId"><em class="required">*</em>specId</label>
+          <input type="text" name="specId" id="specId" />
+        </li>
+		
+        <li>
+          <label for="specName"><em class="required">*</em>specName</label>
+          <input type="text" name="specName" id="specName" />
+        </li>
 
 
+    </ol>
 
+      </form>
+	  
+	  <button id="btnRegister2" onClick="submitForm()" name="btnRegister2">Submit </button>
+</div>
+	  
 
-<button onClick='createTable("2012-07-01");return false;'>
-create table</button>
-</br>
-<div class="MonthPicker" id="example_2" style="width:780px;" title="Example 2">Month Picker v2</div>
-<div id="tableDiv"></div>
+	  
+	  
+	  
+	  
+	  
+	  
+<div align="center">
+<div class="MonthPicker" id="MonthPicker" style="width:100%;" title="Month Picker" align="center"></div>
+<div id="table" align="center" style="width:80%;"></div>
+<div>	  
 
-
+<table id="list4"></table>
+	  
 </body> 
+</html></body> 
 </html>

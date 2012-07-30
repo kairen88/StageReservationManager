@@ -1,0 +1,58 @@
+
+html {
+	background: #fff;
+}
+
+body {
+	width: 960px;
+	margin: 0 auto;
+	padding: 0 0 0 0;
+	background: #eee;
+	font-family: Helvetica, Arial;
+}
+
+h1 {
+	background-color: #FC7600;
+	color: #fff;
+	font-size: 1.6em;
+	padding: 30px 20px 15px 20px;
+	margin-bottom: 20px;
+}
+
+form {
+	padding: 0 20px 20px 20px;
+}
+
+form, form fieldset input, form fieldset select , form label ,form fieldset select option{
+	font-family: Helvetica, Arial;
+	font-size: 12pt;
+}
+form p { position: relative; margin: 10px 0;}
+form p label { position: absolute; top: 0; left: 0;}
+form p br {display: none;}
+
+
+form fieldset p input,
+form fieldset p select,
+form fieldset p textarea {
+	display: block;
+	padding: 4px;
+	width: 400px;
+	margin: 0;
+}
+
+form fieldset p label {
+	width: 380px;
+	display: block;
+	margin: 5px 5px 5px 6px;
+	padding: 0;
+}
+
+form fieldset p textarea,
+form fieldset p input,
+form fieldset p select {
+	border: solid 1px #ccc;
+}
+form fieldset p label {
+	color: #777;
+}
