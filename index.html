@@ -279,7 +279,7 @@ function callback(data,$e){
 	else
 		monthSelected = data["year"] + '-' + data["month"] + '-' + "01";
 
-	if(data["month"] < 9)//for now hardcode data start month sep
+	if(data["month"] < 9 && data["year"] == 2012)//for now hardcode data start month sep
 		hideReservationForm()
 	else
 	{
