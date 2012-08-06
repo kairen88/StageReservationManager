@@ -17,7 +17,7 @@
 .MonthPicker .li:hover li a:hover{background:#09f; color:#ffe}
 .MonthPicker span{display:inline-block; width:58px; padding:1px; line-height:19px; text-align:center; cursor:pointer}
 .MonthPicker .month span{width:40px}
-.MonthPicker .selected{background:#ffe}
+.MonthPicker .selected{background:#FF9900}
 /* print style */
 @media print{
 .MonthPicker span{display:none}

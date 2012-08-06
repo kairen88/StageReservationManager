@@ -1,16 +1,71 @@
+
 <html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<script src="js/jquery-v1.7.2.js"></script>
+<script type="text/javascript">
+	function submitForm()
+	
+		{
+		$.getJSON('displayStage.php', function(table)
+		{
+		
+		var isStageAdded=0;
+		
+						for(row in table)
+						{ 
+						
+			
+							if(  table[row].name == stage_name.value ||  table[row].url == url.value)
+								{
+								isStageAdded=1;
+								}
+						}
+		      
+						if(isStageAdded)
+						{
+							alert("This stage has already been added.");
+							return ;
+						}
+						
+						else {
+		
+		
+																	if(stage_name.value == "")
+																		{
+																			alert("Please enter the stage name");
+																			return;
+																		}
+																	else if(url.value=="")
+																		{
+																			alert("Please enter the stage url");
+																			return;
+																		}
+																	else
+																							{
+																								//post specEnter
+																								$.ajax({type:'POST', url: 'stageDetails.php', data:$('#stageEnter').serialize(), success: function(response) 
+																								{
+																									alert(response);
+																								}});
+																							}
+								}
+		});	
+        }
+</script>
+</head>
 <body>
 <h1>Admin page</h1>
 Enter the details of the stage to be added :
-<form name="input" action="/stageDetails.php" method="post">
-Stage Name: <input type="text" name="name" /> 
+<form name="stageEnter" id="stageEnter" method="post">
+Stage Name: <input type="text" name="stage_name" id="stage_name"/> 
 </br></br>
-Stage URL: <input type="text" name="url" /> 
+Stage URL: <input type="text" name="url" id="url" /> 
 </br></br>
-<input type="submit" value="Submit" name="btnStage"/>
+
 
 </form>
 
-
+<button id="btnRegister" onClick="submitForm()" name="btnRegister">Submit </button>
 </body>
 </html>

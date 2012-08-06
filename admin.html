@@ -1,45 +1,44 @@
+
 <html>
 <head>
-<script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/validate.js"></script>
-<link href="css/styles.css"rel="stylesheet" type="text/css" media="screen" >
-<link href="css/validate.css" type="text/css" rel="stylesheet" media="screen,projection" />
-<link type="text/css" href="css/ui-lightness/jquery-ui-1.8.21.custom.css" rel="stylesheet" />
-<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="js/jquery-ui-1.8.21.custom.min.js"></script>
+<script src="js/jquery-v1.7.2.js"></script>
+<script type="text/javascript">
+	function submitForm()
+	
+		{
+
+		if(username.value == "")
+			{
+				alert("Please enter the username");
+				return;
+			}
+		else if(password.value=="")
+			{
+				alert("Password field cannot be empty");
+				return;
+			}
+	    else
+								{
+									//post login
+									$.ajax({type:'POST', url: 'login.php', data:$('#adminLogin').serialize(), success: function(response) 
+									{
+										alert(response);
+										if(response=="Successfully logged in.")
+										 window.location = "adminpage.html";
+									}});
+								}
+			
+        }
+</script>
 
 </head>
 
 <body>
-  <form name="sample2" id="login" action="login.php" method="post">
-    <ol class="forms">
-
-		<li>
-		 <label for="name"><em class="required">*</em>	Login: </label>
-		</li>
-		
-		<li>
-		<label for="username"><em class="required">*</em>Username:</label>
-		<input type="text" id="username" name="username" required="true">
-		</li>
-		
-		<li>
-		<label for="password"><em class="required">*</em>Password:</label>
-		<input type="password" id="password" name="password" required="true">
-		</li>
-		
-	</ol>
-
-    <ol class="forms">
-      <li class="buttons submit">
-<input type='submit' name='Submit' value='Submit' />
-		
-      </li>
-    </ol>
-	
-
-
-
-</form>
+    <form name="adminLogin" id="adminLogin" method="post">
+		Login: <br/><br/>
+			Username:<input type="text" id="username" name="username" ><br/><br/>
+			Password:<input type="password" id="password" name="password" >
+	</form>
+<button id="btnRegister" onClick="submitForm()" name="btnRegister">Submit </button>
 </body>
 </html>
