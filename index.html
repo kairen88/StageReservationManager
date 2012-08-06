@@ -247,16 +247,16 @@ function loadMonthBar(year, month)
 		
 		//alert(DisplayMonth);
 		
-		$("#MonthPicker").monthpicker(DisplayMonth, callback,{
+		$("#MonthPicker").monthpicker({
 										elements: [
 											{tpl:"year",opt:{
 
 												range: "-0~4",
-												value: currentYear
+												value: year
 											}},
 											{tpl:"month",opt:{
 
-												value: 1
+												value: month
 											}}
 											
 
@@ -268,16 +268,25 @@ function loadMonthBar(year, month)
 }
 	
 function callback(data,$e){
+
 	var str = "";
 	for(key in data) {
 		str += " " + key + ": " + data[key]+ "; ";
 	}
 	
-	if(data["month"] < 10)
+	if(data["month"] < 10)//check if month is single digit(instead of double) format accordingly
 		monthSelected = data["year"] + '-' + '0' + data["month"] + '-' + "01";
 	else
 		monthSelected = data["year"] + '-' + data["month"] + '-' + "01";
-	//alert(monthSelected);
+
+	if(data["month"] < 9)//for now hardcode data start month sep
+		hideReservationForm()
+	else
+	{
+		//check if reservation form is already open
+		if($('#formDiv').attr('class') == 'hidden')
+			showReservationForm()
+	}
 	
 	createTableForValidMonth(monthSelected);
 
@@ -361,6 +370,20 @@ function stageReservationFormInIt()
 
 }
 
+function hideReservationForm()
+{
+	$('#formDiv').hide('slow');
+	$('#formDiv').addClass('hidden');
+	//alert($('#formDiv').attr('class') );
+}
+
+function showReservationForm()
+{
+	$('#formDiv').show('slow');
+	$('#formDiv').removeClass('hidden');
+	//alert($('#formDiv').attr('class') );
+}
+
 function tableInIt()
 {
 	current = new Date();
@@ -369,6 +392,7 @@ function tableInIt()
 	month = current.getMonth();
 	month = month + 1;		
 	
+	//if current month is before sep 2012 for which we have data of stage reservation, show table for sep 
 	if(month < (dataStartDate.getMonth()+1) && current.getFullYear() == dataStartDate.getFullYear() )	
 		month = dataStartDate.getMonth() + 1;
 		
@@ -436,25 +460,29 @@ window.onload = init;
   <li style="padding-top:0.5%; font-size:13px;">        Maintain the reservation table below; after 31 days, move the past dates from the top of the table to the bottom, and increment the month</li>
   <li style="padding-top:0.5%; font-size:13px;">      STAGE2VM4229 is reserved for Compliance PD BAU. Owner Karthick</li>
   <li style="padding-top:0.5%; font-size:13px;">        By default, these following people have "owner" rights of all the stages: Karthick Sundararajan [ksundarajan]. Contact them to get access. </li>
-</ul>
-	<h4 style="margin-bottom:0%;margin-top:0%;">Reservation Form :</h4>
-	  <form name="sample" id="reservationForm" action="reserve.php" method="post" style="margin-bottom:0%">
-
-          Stage Name<select name="stageName" id="stageNameSelector">
-						<option value="">Select...</option>
-					</select>
- 
-		  From:<input type="text" id="datepicker" name="dateFrom" required="true">
-
-		  To:<input type="text" id="datepicker2" name="dateTo" required="true" >
-
-          Spec Id:<input type="text" name="specId" id="specId" />
- 
-          Spec Name:<input type="text" name="specName" id="specName" />
+  <li style="padding-top:0.5%; font-size:13px;">        Best viewed in Firefox, Chrome and IE 9. </li>
+  </ul>
+	<div id="formDiv">
+		<h4 style="margin-bottom:0%;margin-top:0%;">Reservation Form :</h4>
 		
-		
-      </form>
-	  <button id="btnRegister2" onClick="submitForm()" name="btnRegister2" style="margin-top:20px;">Submit </button>
+		  <form name="sample" id="reservationForm" action="reserve.php" method="post" style="margin-bottom:0%">
+
+			  Stage Name<select name="stageName" id="stageNameSelector">
+							<option value="">Select...</option>
+						</select>
+	 
+			  From:<input type="text" id="datepicker" name="dateFrom" required="true">
+
+			  To:<input type="text" id="datepicker2" name="dateTo" required="true" >
+
+			  Spec Id:<input type="text" name="specId" id="specId" />
+	 
+			  Spec Name:<input type="text" name="specName" id="specName" />
+			
+			
+		  </form>
+		  <button id="btnRegister2" onClick="submitForm()" name="btnRegister2" style="margin-top:20px;">Submit </button>
+	  </div>
 
 </div>
 	  
