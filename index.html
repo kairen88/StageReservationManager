@@ -235,24 +235,19 @@ function createColModelObj(name, align)
 	return colModel				
 }
 
-function loadMonthBar()
+function loadMonthBar(year, month)
 {
-	current = new Date();
-	month = current.getMonth();
-	month = month + 1;//month from getMonth is 0 based, need to add 1
-	//month = 8;
-
-	if(month < 10)
-		defaultDispMonth = current.getFullYear() + '-' + '0' + month ;
-	else
-		defaultDispMonth = current.getFullYear() + '-' + month ;
-
-	
 	$(function(){		
 
-		currentYear = new Date().getFullYear();
+		currentDate = new Date();
+		currentYear = currentDate.getFullYear();
+		currentMonth = currentDate.getMonth() + 1;
 		
-		$("#MonthPicker").monthpicker({
+		DisplayMonth = year + '-' + month + '-' + '01';
+		
+		//alert(DisplayMonth);
+		
+		$("#MonthPicker").monthpicker(DisplayMonth, callback,{
 										elements: [
 											{tpl:"year",opt:{
 
@@ -369,15 +364,22 @@ function stageReservationFormInIt()
 function tableInIt()
 {
 	current = new Date();
+	dataStartDate = new Date('2012-09-01');
+	
 	month = current.getMonth();
-	month = month + 1;
+	month = month + 1;		
+	
+	if(month < (dataStartDate.getMonth()+1) && current.getFullYear() == dataStartDate.getFullYear() )	
+		month = dataStartDate.getMonth() + 1;
+		
+	loadMonthBar(current.getFullYear(), month);
 	
 	if(month < 10)
-		month = current.getFullYear() + '-' + '0' + month + '-' + "01";
+		displayDate = current.getFullYear() + '-' + '0' + month + '-' + "01";
 	else
-		month = current.getFullYear() + '-' + month + '-' + "01";
+		displayDate = current.getFullYear() + '-' + month + '-' + "01";	
 	
-	createTableForValidMonth(month);
+	createTableForValidMonth(displayDate);
 	
 	//createTable(current.getFullYear() + '-' + '0' + month + '-' + "01")
 	
@@ -392,7 +394,7 @@ function jqTest()
 function init()
 		{
 			//jqTest() //to test if JqGrid table is working
-			loadMonthBar()
+			//loadMonthBar()
 			tableInIt()
 			
 			//load init from form.js
