@@ -1,15 +1,44 @@
+
 <html>
+<head>
+<script src="js/jquery-v1.7.2.js"></script>
+<script type="text/javascript">
+	function submitForm()
+	
+		{
+
+		if(username.value == "")
+			{
+				alert("Please enter the username");
+				return;
+			}
+		else if(password.value=="")
+			{
+				alert("Password field cannot be empty");
+				return;
+			}
+	    else
+								{
+									//post login
+									$.ajax({type:'POST', url: 'login.php', data:$('#adminLogin').serialize(), success: function(response) 
+									{
+										alert(response);
+										if(response=="Successfully logged in.")
+										 window.location = "adminpage.html";
+									}});
+								}
+			
+        }
+</script>
+
+</head>
+
 <body>
-<form id='login' action='login.php' method='post' accept-charset='UTF-8'>
-<fieldset >
-<legend>Login</legend>
-<input type='hidden' name='submitted' id='submitted' value='1'/>
-<label for='username' >UserName*:</label>
-<input type='text' name='username' id='username'  maxlength="50" />
-<label for='password' >Password*:</label>
-<input type='password' name='password' id='password' maxlength="50" />
-<input type='submit' name='Submit' value='Submit' />
-</fieldset>
-</form>
+    <form name="adminLogin" id="adminLogin" method="post">
+		Login: <br/><br/>
+			Username:<input type="text" id="username" name="username" ><br/><br/>
+			Password:<input type="password" id="password" name="password" >
+	</form>
+<button id="btnRegister" onClick="submitForm()" name="btnRegister">Submit </button>
 </body>
 </html>

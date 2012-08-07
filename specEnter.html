@@ -1,19 +1,87 @@
 <html>
+<head>
+<title>Spec Enter</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<script src="js/jquery-v1.7.2.js"></script>
+<script type="text/javascript">
+	function submitForm()
+	
+		{
+		  
+		
+         	$.getJSON('specDropDown.php', function(table)
+			{ 
+					
+				
+
+					var isSpecDetailValid=0;
+						for(row in table)
+						{ 
+							if(  table[row].spec_id == spec_id.value || table[row].spec_name == spec_name.value )
+								{
+								isSpecDetailValid=1;
+								}
+						}
+		      
+						if(isSpecDetailValid)
+						{
+							alert("This spec has already been added.");
+							return ;
+						}
+						else {
+		
+
+																	//if(spec_id.value == "")
+																		//{
+																			//alert("Please enter the spec ID");
+																			//return;
+																		//}
+																	//else
+																	if(spec_name.value=="")
+																		{
+																			alert("Please enter the spec name");
+																			return;
+																		}
+																	else if(spec_lead_email.value=="")
+																		{
+																			alert("Please enter the spec lead email");
+																			return;
+																		}
+																	//else if(DTL_email.value=="")
+																		//{
+																			//alert("Please enter the DTL email");
+																			//return;
+																		//}
+																	else
+																							{
+																								//post specEnter
+																								$.ajax({type:'POST', url: 'specDetails.php', data:$('#specEnter').serialize(), success: function(response) 
+																								{
+																									alert(response);
+																								}});
+																							}
+			
+							 }
+			});
+        }
+</script>
+</head>
 <body>
 <h1>Spec page</h1>
 Enter the details of the spec to be added :
-<form name="input" action="/specDetails.php" method="post">
-Spec ID: <input type="text" name="spec_id" /> 
+<form name="specEnter" id="specEnter"  method="post">
+Spec ID: <input type="text" id="spec_id" name="spec_id" /> 
 </br></br>
-Spec Name: <input type="text" name="spec_name" /> 
+Spec Name: <input type="text" id="spec_name" name="spec_name" /> 
 </br></br>
-Spec lead email: <input type="text" name="spec_lead_email" /> 
+Spec lead email: <input type="text" id="spec_lead_email" name="spec_lead_email"/> 
 </br></br>
-DTL-email: <input type="text" name="DTL_email" /> 
+DL-email: <input type="text" id="DTL_email" name="DTL_email"/> 
 </br></br>
-<input type="submit" value="Submit" name="btnSpec"/>
+
 
 </form>
+<button id="btnRegister" onClick="submitForm()" name="btnRegister">Submit </button>
 
 
 </body>

@@ -1,11 +1,11 @@
 <?php
 //===============Server Configuration============
-$mysql_host = "localhost.zymic.com";
-$mysql_database = "saran93_zxq_ppstage";
-$mysql_user = "760379_ppuser";
-$mysql_password = "password123";
+$mysql_host = "10.238.85.62";
+$mysql_database = "stage_rm";
+$mysql_user = "mpais";
+$mysql_password = "mpais123";
 //Establish Connection with Server
-$conn        =    mysql_connect($mysql_host,$mysql_user,$mysql_password) or die('Server Information is not Correct'); 
+$conn        =    mysql_connect($mysql_host,$mysql_user,$mysql_password) or die('B'); 
 mysql_select_db($mysql_database,$conn) or die('Database Information is not correct');
 
 

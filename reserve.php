@@ -1,15 +1,9 @@
 <?php
 //===============Server Configuration============
-// $mysql_host = "mysql4.000webhost.com";
-// $mysql_database = "a4670404_ppstage";
-// $mysql_user = "a4670404_kairen";
-// $mysql_password = "password123";
-
-$mysql_host = "localhost";
-$mysql_database = "saran93_zxq_ppstage";
-$mysql_user = "760379_ppuser";
-$mysql_password = "password123";
-
+$mysql_host = "10.238.85.62:3306/";
+$mysql_database = "stage_rm";
+$mysql_user = "mpais";
+$mysql_password = "mpais123";
 //Establish Connection with Server
 $conn        =    mysql_connect($mysql_host,$mysql_user,$mysql_password) or die('Server Information is not Correct'); 
 mysql_select_db($mysql_database,$conn) or die('Database Information is not correct');
@@ -26,6 +20,12 @@ if(isset($_POST['stageName']))
 {
 					$q1= " SELECT * FROM stageReservation 
 					WHERE stage_name='$stage_name' AND status='R'
+												   AND NOT(
+														   (date_reserved_from>'$date_reserved_from' AND date_reserved_from>'$date_reserved_to' AND date_reserved_to>'$date_reserved_from' AND date_reserved_to>'$date_reserved_to') 
+														   OR 
+														   (date_reserved_from<'$date_reserved_from' AND date_reserved_from<'$date_reserved_to' AND date_reserved_to<'$date_reserved_from' AND date_reserved_to<'$date_reserved_to')
+														)
+					
 												   AND(
 															(date_reserved_from>='$date_reserved_from' AND date_reserved_to<='$date_reserved_to')
 													   OR   (date_reserved_from>='$date_reserved_from' AND date_reserved_to>='$date_reserved_to') 
@@ -44,6 +44,9 @@ if(isset($_POST['stageName']))
 												$s_id=$row['spec_id'];
 												$old_from=$row['date_reserved_from'];
 												$old_to=$row['date_reserved_to'];
+												$old_spec_id=$row['spec_id'];
+												$old_spec_name=$row['spec_name'];
+												$old_date_reserved=$row['date_reserved'];
 											
 												
 												$from_date=$date_reserved_from;
@@ -55,29 +58,28 @@ if(isset($_POST['stageName']))
 																$to_date=$date_reserved_to;
 																
 																$new_date=date("Y-m-d",strtotime("-1 day", strtotime($date_reserved_from )));
-																echo "<br/>";
-																echo "NEW DATE : $new_date";
+																
+																//echo "\nNEW DATE : $new_date";
 																$querynew1    =    "INSERT INTO stageReservation(date_reserved,date_reserved_from,date_reserved_to,stage_name,spec_id,spec_name,status)
-																					VALUES(DATE(NOW()),'$old_from','$new_date','$stage_name','$spec_id','$spec_name','R')";
+																					VALUES('$old_date_reserved','$old_from','$new_date','$stage_name','$old_spec_id','$old_spec_name','R')";
 																$resnew1    =    mysql_query($querynew1);
 																if($resnew1)
 																{
-																	echo "<br />";
-																	echo "Case1.1 executed successfully.<br />";
-																	echo "<br />";
+																	//echo "\nCase1.1 executed successfully.";
+														
 																}
 																
 																$new_date=date("Y-m-d", strtotime("+1 day", strtotime($date_reserved_to)));
-																echo "<br/>";
-																echo "NEW DATE : $new_date";
+																
+																//echo "\nNEW DATE : $new_date";
 																$querynew2    =    "INSERT INTO stageReservation(date_reserved,date_reserved_from,date_reserved_to,stage_name,spec_id,spec_name,status)
-																					VALUES(DATE(NOW()),'$new_date','$old_to','$stage_name','$spec_id','$spec_name','R')";
+																					VALUES('$old_date_reserved','$new_date','$old_to','$stage_name','$old_spec_id','$old_spec_name','R')";
 																$resnew2    =    mysql_query($querynew2);
 																if($resnew2)
 																{
-																	echo "<br />";
-																	echo "Case1.2 executed successfully.<br />";
-																	echo "<br />";
+																	
+																	//echo "\nCase1.2 executed successfully.";
+																	
 																}
 																
 											    
@@ -94,13 +96,13 @@ if(isset($_POST['stageName']))
 																	$from_date=$old_from;
 																	$new_date=date("Y-m-d", strtotime("+1 day", strtotime($date_reserved_to)));
 																	$querynew3    =    "INSERT INTO stageReservation(date_reserved,date_reserved_from,date_reserved_to,stage_name,spec_id,spec_name,status)
-																					VALUES(DATE(NOW()),'$new_date','$old_to','$stage_name','$spec_id','$spec_name','R')";
+																					VALUES('$old_date_reserved','$new_date','$old_to','$stage_name','$old_spec_id','$old_spec_name','R')";
 																$resnew3    =    mysql_query($querynew3);
 																if($resnew3)
 																{
-																	echo "<br />";
-																	echo "Case3 executed successfully.<br />";
-																	echo "<br />";
+																
+																	//echo "\nCase3 executed successfully.";
+																	
 																}
 													
 												}
@@ -110,13 +112,13 @@ if(isset($_POST['stageName']))
 																$to_date=$old_to;
 															$new_date=date("Y-m-d", strtotime("-1 day", strtotime($date_reserved_from )));	
 															$querynew4    =    "INSERT INTO stageReservation(date_reserved,date_reserved_from,date_reserved_to,stage_name,spec_id,spec_name,status)
-																				VALUES(DATE(NOW()),'$old_from','$new_date','$stage_name','$spec_id','$spec_name','R')";
+																				VALUES('$old_date_reserved','$old_from','$new_date','$stage_name','$old_spec_id','$old_spec_name','R')";
 															$resnew4    =    mysql_query($querynew4);
 															if($resnew4)
 															{
-																echo "<br />";
-																echo "Case4 executed successfully.<br />";
-																echo "<br />";
+																
+																//echo "\nCase4 executed successfully.";
+																
 															}
 													
 												}
@@ -125,11 +127,11 @@ if(isset($_POST['stageName']))
 												$res_old    =    mysql_query($query_old);
 															if($res_old)
 															{
-																echo "<br />";
-																echo "Status updated to O successfully.<br />";
-																echo "<br />";
+																
+																//echo "\nStatus updated to O successfully.";
+															
 															}
-												
+												if($spec_name!=$old_spec_name)
 												// echo $s_id;
 												// echo "<br />";
 												// echo "  Stage to be deleted: \n $r_id  " ;
@@ -138,6 +140,12 @@ if(isset($_POST['stageName']))
 												//$res2    =   mysql_query($q2);
 												//if($res2)
 												//{
+												{
+												
+												
+													$query_old1 = "UPDATE stageReservation SET overwritten_date=DATE(NOW()),overwriting_spec='$spec_name' WHERE reservation_id='$r_id'";
+													$res_old1   =    mysql_query($query_old1);
+												
 												
 													$q3=" SELECT spec_lead_email,dtl_email FROM spec WHERE spec_id='$s_id'";
 													$res3= mysql_query($q3);
@@ -156,17 +164,20 @@ if(isset($_POST['stageName']))
 													// echo $s_email;
 													// echo $d_email;
 													$to  = $s_email . ', '.$d_email . ', '.$new_s_email. ', '.$new_d_email; 
-													$subject = "Stage Reservation period Overwritten!";
+													$subject = "Stage Reservation period Overwritten!\n";
 													$body = "Hi,Recently your Stage Reservation period was overwritten for the duration 
-																$from_date to $to_date by $spec_name";
-													//mail($to, $subject, $body);
-													 echo "Receipients : $to";
-													 echo "<br/>";
-													 echo "Subject : $subject ";
-													 echo "<br/>";
-													 echo "Message : $body ";
-													 echo "<br />";
-													
+																$from_date to $to_date by $spec_name\n";
+													//if(	mail($to, $subject, $body))
+														//echo "mail sent ";
+													//else
+													   // echo "error sending mail";
+													// echo "Receipients : $to\n";
+													 //echo "Subject : $subject \n";
+													// echo "Message : $body ";
+													$body2 = "You have overwritten $old_spec_name 's Stage reservation period from $from_date to $to_date \n";
+													echo $body2;
+													 
+												}	
 													
 														//echo "Deleted $i row\n" ;
 														//$i++;
@@ -187,9 +198,8 @@ if(isset($_POST['stageName']))
 					$res    =    mysql_query($query);
 					if($res)
 					{
-						//echo "<br />";
-						echo "Stage registered successfully.";
-						//echo "<a href=\"display.php\">Click here to proceed</a>"; 
+						
+						echo "\nStage registered successfully.";
 					}
 
 }

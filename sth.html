@@ -1,0 +1,110 @@
+<html>
+<head>
+<title>Release Notes V0.1</title>
+<style>
+h3,a{color:24BBE9;}
+li {padding-top:2%;}
+</style>
+</head>
+
+<body>
+<h2 align="center" style="font-family:'Arial Black', Gadget, sans-serif; color:ff9900;">Stage Reservation App V0.1</h2>
+<h3 align="center" style="font-family:'Palatino Linotype','Book Antiqua', Palatino, serif; color:777879;">Release Notes</h3>
+<hr/>
+
+<a name="intro">
+<h3>Introduction</h3></a>
+<div id="intro" style="line-height:200%;">Welcome to the V0.1 release of Compliance Stage Reservation Manager App (CSRM). CSRM aims to improve and optimize stage reservation processes and aid developers by increasing usability and providing a friendly UI to facilitate stage management. CSRM automates the reservation process and prevents accidental overwriting of reservations, ensuring users are informed when overwriting reservations and reminding them to inform appropriate spec leads/ dl of changes in stage reservation.</div>
+
+<a name="Use app">
+<h3>How to use the App?</h3> </a>
+<ul>
+<li>Navigate to the link : <a href="http://10.238.85.62/CSRM/index.html">http://10.238.85.62/CSRM/index.html</a></li>
+<li>Enter stage reservation details in the Reservation form located above the table.</li>
+		<ul>
+			<li>Choose the stage from the drop down menu</li>
+			<li>Select the period for which you want to reserve the stage for(the To date must be greater than the From date)</li>
+			<li>Enter the Spec Id and Spec Name of the Spec for which the stage is being reserved.You can choose to fill either of the fields as the other field is auto filled as soon as one of them is entered.</li>
+		</ul>
+<li>You can reserve stages only for specs whose details are present in the database. If you wish to reserve a stage for new spec then proceed with the following steps :</li>
+		<ul>
+			<li>Click on the <a href="specEnter.html">Add New Spec</a> link which can be found at the top left corner of the home page.</li>
+			<li>You will be redirected to a page where you can enter the details of the new spec that is to be added</li>
+			<li>Fill in the details and click Submit. (While Spec ID and DL-email values may be left blank , the Spec Name and the Spec lead email are mandatory fields. If their values are not entered , you will not be able to add the new spec)</li>
+			<li>Once the spec has been added , you can proceed with reserving a stage for that spec.</li>
+		</ul>
+<li>Once a reservation has been made , you can view it in the table by choosing the correct year and month in the monthpicker which is at the head of the table.		
+</ul>
+
+
+<a name="Capabilities">
+<h3>Capabilities of V0.1</h3></a>
+<ul>
+	<li>Prevents accidental Overwriting of reservations</li>
+	<ul>
+	<li>While reserving a stage , if the application detects that you are trying to overwrite a reservation made by another spec for the same stage, a warning is issued.</li>
+	<li>You can choose to cancel the current operation or can continue with the overwriting</li>
+	<li>In case you wish to overwrite , you will be notified of the details of the spec lead of the overwritten spec so that you can contact them about the changes in stage reservation.</li>
+	</ul>
+	<li>User friendly interface</li>
+	<ul>
+	<li>This application makes use of jqgrid - an external js library which comes with various features:</li>
+	<ul>
+	<li>View records by year </li>
+	<li>View records by month </li>
+	<li>Choose to display only certain columns(for example , you may wish to view reservations only for a specific stage)</li>
+	</ul>
+	<li>All the above functionalities can be done by clicking on the <b>choose column</b> button at the bottom left corner of the table.</li>
+	</ul>
+	<li>Enhanced search function</li>
+	<ul>
+	<li> Click on the <b>find records</b> option (search icon) located at the bottom left corner of the table , this opens up a widget which allows you to search the records with filters. like 
+	<ul>
+		<li>Search by Columns </li>
+		<li>Add qualifiers: equal, less than, greater... </li>
+		<li>Multiple search criteria </li>
+		<li>Match any/all rules</li>
+	</ul>
+	</ul>
+
+</ul>
+
+
+<a name="limitations">
+<h3>Limitations</h3></a>
+<ul>
+	<li>V0.1 is not compatible with Internet Explorer version 8 and below.</li>
+	<li>The sorting functionality in the table does not work in Chrome</li>
+	<li>Table width may not be fully expanded in Chrome</li>
+
+</ul>
+
+
+<a name="future">
+<h3>Future releases</h3></a>
+<ul>
+<li>Calendar view</li>
+<li>Edit stage details</li>
+<li>Edit spec details</li>
+<li>Admin page as popup window</li>
+<li>Spec page as a popup window</li>
+<li>email notifications</li>
+<li>LDAP integration</li>
+<li>JIRA integration for issues/bugs</li>
+</ul>
+
+
+<a name="bugs">
+<h3>Reporting bugs</h3></a>
+<ul>
+<li>If you find a bug in the application , click on the <b>Report a Bug</b> link </li>
+<li>Through this you can inform us of the bug , but do ensure that you have clearly specified the issue , the page where you found it and how. </li>
+</ul>
+
+
+
+</ul>
+<hr/>
+<img src="FBRD-Logo2.png" height="100" width="500" style="margin-left:35%;"/>
+</body>
+</html>
