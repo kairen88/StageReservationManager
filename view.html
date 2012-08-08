@@ -273,12 +273,8 @@ function callback(data,$e){
 		str += " " + key + ": " + data[key]+ "; ";
 	}
 	
-	//check if year changed, if changed, set month to jan ---- on hold do not delete
-	//if(data["year"] != selectedYear)
-	//{
-	//	data["month"] = 1; //set month as jan
-		//loadMonthBar(data["year"], data["month"]) //cannot reload month picker, messes with year range, need to add function to set month in lib
-	//}
+	
+
 	
 	
 	if(data["month"] < 10)//check if month is single digit(instead of double) format accordingly
@@ -294,12 +290,18 @@ function callback(data,$e){
 		if($('#formDiv').attr('class') == 'hidden')
 			showReservationForm()
 	}
-	
-	selectedYear = data["year"];
-	selectedMonth = data["month"];
-	
-	createTableForValidMonth(monthSelected);
 
+	createTableForValidMonth(monthSelected);
+	
+//check if year changed, if changed, set month to jan
+	if(data["year"] != selectedYear)
+	{
+		selectedYear = data["year"];
+		selectedMonth = data["month"];
+		selectMonth(01); //set month as jan
+	}
+		
+	
 }
 
 function createTableForValidMonth(monthSelected)
@@ -392,6 +394,14 @@ function showReservationForm()
 	$('#formDiv').show('slow');
 	$('#formDiv').removeClass('hidden');
 	//alert($('#formDiv').attr('class') );
+}
+
+//month entered has to be 2 digits eg. 05
+function selectMonth(month)
+{
+	//alert( jQuery('#' + month).attr('title') );
+					
+	jQuery('#' + month).click();
 }
 
 function tableInIt()
@@ -500,11 +510,6 @@ window.onload = init;
 </div>
 	  
 
-	  
-	  
-	  
-	  
-	  
 	  
 <div align="center">
 <div class="MonthPicker" id="MonthPicker" style="width:780px;" title="Month Picker" align="center"></div>

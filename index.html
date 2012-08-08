@@ -63,6 +63,9 @@
 
 <script type="text/javascript">
 
+var selectedYear
+var selectedMonth
+
 function createTable(monthSelected)
 {
 
@@ -238,10 +241,6 @@ function createColModelObj(name, align)
 function loadMonthBar(year, month)
 {
 	$(function(){		
-
-		currentDate = new Date();
-		currentYear = currentDate.getFullYear();
-		currentMonth = currentDate.getMonth() + 1;
 		
 		DisplayMonth = year + '-' + month + '-' + '01';
 		
@@ -266,7 +265,7 @@ function loadMonthBar(year, month)
 		
 		});
 }
-	
+
 function callback(data,$e){
 
 	var str = "";
@@ -274,12 +273,16 @@ function callback(data,$e){
 		str += " " + key + ": " + data[key]+ "; ";
 	}
 	
+	
+
+	
+	
 	if(data["month"] < 10)//check if month is single digit(instead of double) format accordingly
 		monthSelected = data["year"] + '-' + '0' + data["month"] + '-' + "01";
 	else
 		monthSelected = data["year"] + '-' + data["month"] + '-' + "01";
 
-	if(data["month"] < 9 && data["year"] == 2012)//for now hardcode data start month sep
+	if(data["month"] < 9 && data["year"] == 2012)//for now hardcode data start 2012 sep
 		hideReservationForm()
 	else
 	{
@@ -287,9 +290,18 @@ function callback(data,$e){
 		if($('#formDiv').attr('class') == 'hidden')
 			showReservationForm()
 	}
-	
-	createTableForValidMonth(monthSelected);
 
+	createTableForValidMonth(monthSelected);
+	
+//check if year changed, if changed, set month to jan
+	if(data["year"] != selectedYear)
+	{
+		selectedYear = data["year"];
+		selectedMonth = data["month"];
+		selectMonth(01); //set month as jan
+	}
+		
+	
 }
 
 function createTableForValidMonth(monthSelected)
@@ -384,6 +396,14 @@ function showReservationForm()
 	//alert($('#formDiv').attr('class') );
 }
 
+//month entered has to be 2 digits eg. 05
+function selectMonth(month)
+{
+	//alert( jQuery('#' + month).attr('title') );
+					
+	jQuery('#' + month).click();
+}
+
 function tableInIt()
 {
 	current = new Date();
@@ -402,6 +422,9 @@ function tableInIt()
 		displayDate = current.getFullYear() + '-' + '0' + month + '-' + "01";
 	else
 		displayDate = current.getFullYear() + '-' + month + '-' + "01";	
+		
+	selectedYear = current.getFullYear();
+	selectedMonth = month;
 	
 	createTableForValidMonth(displayDate);
 	
@@ -487,11 +510,6 @@ window.onload = init;
 </div>
 	  
 
-	  
-	  
-	  
-	  
-	  
 	  
 <div align="center">
 <div class="MonthPicker" id="MonthPicker" style="width:780px;" title="Month Picker" align="center"></div>
