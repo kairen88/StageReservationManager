@@ -63,6 +63,9 @@
 
 <script type="text/javascript">
 
+var selectedYear
+var selectedMonth
+
 function createTable(monthSelected)
 {
 
@@ -149,11 +152,12 @@ function populateTable(monthSelected, stageArray)
 			colnames = new Array();
 
 			//creating month and day column models
-			monthModel = new createColModelObj("month", "center");
+			//monthModel = new createColModelObj("month", "center"); //removing month column
 			dayModel = new createColModelObj("day", "center");
-			colnames.push("Month", "Day");
+			//colnames.push("Month", "Day");//removing month column
+			colnames.push("Day");
 			
-			colmodelAry.push(monthModel);
+			//colmodelAry.push(monthModel); //removing month column
 			colmodelAry.push(dayModel);
 	
 			//populating table attributes
@@ -219,7 +223,8 @@ shrinkToFit: true,
 
                          });
 			//grid.setGridWidth(780,true);
-			 
+			$('.ui-jqgrid-titlebar-close').remove();//removes minimize button on table titlebar
+			
 			for(var i=0;i<=tableData.length;i++)
 				jQuery("#reservationList").jqGrid('addRowData',i+1,tableData[i]);
 }
@@ -238,10 +243,6 @@ function createColModelObj(name, align)
 function loadMonthBar(year, month)
 {
 	$(function(){		
-
-		currentDate = new Date();
-		currentYear = currentDate.getFullYear();
-		currentMonth = currentDate.getMonth() + 1;
 		
 		DisplayMonth = year + '-' + month + '-' + '01';
 		
@@ -266,7 +267,7 @@ function loadMonthBar(year, month)
 		
 		});
 }
-	
+
 function callback(data,$e){
 
 	var str = "";
@@ -274,12 +275,16 @@ function callback(data,$e){
 		str += " " + key + ": " + data[key]+ "; ";
 	}
 	
+	
+
+	
+	
 	if(data["month"] < 10)//check if month is single digit(instead of double) format accordingly
 		monthSelected = data["year"] + '-' + '0' + data["month"] + '-' + "01";
 	else
 		monthSelected = data["year"] + '-' + data["month"] + '-' + "01";
 
-	if(data["month"] < 9 && data["year"] == 2012)//for now hardcode data start month sep
+	if(data["month"] < 9 && data["year"] == 2012)//for now hardcode data start 2012 sep
 		hideReservationForm()
 	else
 	{
@@ -287,9 +292,21 @@ function callback(data,$e){
 		if($('#formDiv').attr('class') == 'hidden')
 			showReservationForm()
 	}
-	
-	createTableForValidMonth(monthSelected);
 
+	
+	
+//check if year changed, if changed, set month to jan
+	if(data["year"] != selectedYear)
+	{
+		selectedYear = data["year"];
+		selectedMonth = data["month"];
+		createTableForValidMonth(monthSelected);
+		selectMonth(01); //set month as jan
+	}
+	else
+		createTableForValidMonth(monthSelected);
+		
+	
 }
 
 function createTableForValidMonth(monthSelected)
@@ -384,6 +401,21 @@ function showReservationForm()
 	//alert($('#formDiv').attr('class') );
 }
 
+//enter month < 10 as single digit, > 10 as double digit
+function selectMonth(month)
+{
+	//alert( jQuery('#' + month).attr('title') );
+					
+	jQuery('#' + month).click();
+}
+
+function selectYear(year)
+{
+	//alert( jQuery('#' + month).attr('title') );
+					
+	jQuery('#' + year).click();
+}
+
 function tableInIt()
 {
 	current = new Date();
@@ -402,6 +434,9 @@ function tableInIt()
 		displayDate = current.getFullYear() + '-' + '0' + month + '-' + "01";
 	else
 		displayDate = current.getFullYear() + '-' + month + '-' + "01";	
+		
+	selectedYear = current.getFullYear();
+	selectedMonth = month;
 	
 	createTableForValidMonth(displayDate);
 	
@@ -488,13 +523,8 @@ window.onload = init;
 	  
 
 	  
-	  
-	  
-	  
-	  
-	  
 <div align="center">
-<div class="MonthPicker" id="MonthPicker" style="width:780px;" title="Month Picker" align="center"></div>
+<div class="MonthPicker" id="MonthPicker" style="width:780px;" align="center"></div>
 <div id="table" align="center" style="width:90%;"></div>
 <div>	  
 

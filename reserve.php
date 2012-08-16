@@ -1,9 +1,5 @@
 <?php
-//===============Server Configuration============
-$mysql_host = "10.238.85.62:3306/";
-$mysql_database = "stage_rm";
-$mysql_user = "mpais";
-$mysql_password = "mpais123";
+include 'config.php';
 //Establish Connection with Server
 $conn        =    mysql_connect($mysql_host,$mysql_user,$mysql_password) or die('Server Information is not Correct'); 
 mysql_select_db($mysql_database,$conn) or die('Database Information is not correct');
@@ -174,7 +170,7 @@ if(isset($_POST['stageName']))
 													// echo "Receipients : $to\n";
 													 //echo "Subject : $subject \n";
 													// echo "Message : $body ";
-													$body2 = "You have overwritten $old_spec_name 's Stage reservation period from $from_date to $to_date \n";
+													$body2 = "You have overwritten $old_spec_name's Stage reservation period from $from_date to $to_date \nPlease notify $new_s_email of this change \n";
 													echo $body2;
 													 
 												}	
@@ -199,7 +195,7 @@ if(isset($_POST['stageName']))
 					if($res)
 					{
 						
-						echo "\nStage registered successfully.";
+						echo "\nStage reserved successfully.";
 					}
 
 }

@@ -1,12 +1,23 @@
 		function loadDatePicker()
 		{
+		var today = new Date();
+		var myDate=new Date();
+		var defaultDate=new Date();
+		myDate.setFullYear(2012,8,1);
+		if(today<myDate)
+			defaultDate.setFullYear(2012,8,1);
+		else
+			defaultDate=today;
+		
+		//alert("default: "+defaultDate);
+		
 			$(function() {
 				$( "#datepicker" ).datepicker({
 					showOn: "both",
 					buttonImage: "images/calendar.gif",
 					buttonImageOnly: true,
 					dateFormat: "yy-mm-dd",
-					defaultDate:"2012-09-01",
+					defaultDate:defaultDate,
 					onSelect: function(dateText, inst) {
 					$( "#datepicker2" ).datepicker( "setDate" , $('#datepicker').val() );
 					}
@@ -20,7 +31,7 @@
 					buttonImage: "images/calendar.gif",
 					buttonImageOnly: true,
 					dateFormat: "yy-mm-dd",
-					defaultDate:"2012-09-01",
+					defaultDate:defaultDate,
 				});
 
 
@@ -112,7 +123,9 @@
 			
 			curr_date=new Date();
 			from_date=new Date(new_from_date);
-			to_date=new Date(new_to_date);		
+			to_date=new Date(new_to_date);	
+			var myDate=new Date();
+			myDate.setFullYear(2012,8,1);			
 
 			curr_date.setHours(0,0,0,0)
 			
@@ -129,6 +142,11 @@
 				if(from_date > to_date || (curr_date>from_date) || isNaN(from_date.getTime()) || isNaN(to_date.getTime()) )
 				{
 					alert("Invalid reservation period");
+					return;
+				}
+				if(!(from_date>= myDate) && !(to_date>=myDate))
+				{
+					alert("Reservations can be made only from the month of September 2012");
 					return;
 				}
 				else
@@ -154,17 +172,13 @@
 							$.getJSON('display.php', function(table)
 							{
 								var isOverwritten = 0;
-								var noConflict=0;
 								for(row in table)
 								{
-								   if((table[row].date_reserved_from>new_from_date && table[row].date_reserved_from>new_to_date &&table[row].date_reserved_to>new_from_date && table[row].date_reserved_to>new_to_date) || (table[row].date_reserved_from<new_from_date && table[row].date_reserved_from<new_to_date &&table[row].date_reserved_to<new_from_date && table[row].date_reserved_to<new_to_date))
-										{
-										 
-										 noConflict=1;
-										 
-									    }
+								 
+										
 
-									if( table[row].status=='R' && table[row].stage_name==stage && noConflict==0 &&(
+									if( table[row].status=='R' && table[row].stage_name==stage && !((table[row].date_reserved_from>new_from_date && table[row].date_reserved_from>new_to_date &&table[row].date_reserved_to>new_from_date && table[row].date_reserved_to>new_to_date) || (table[row].date_reserved_from<new_from_date && table[row].date_reserved_from<new_to_date &&table[row].date_reserved_to<new_from_date && table[row].date_reserved_to<new_to_date))
+									&&(
 									(table[row].date_reserved_from>=new_from_date && table[row].date_reserved_to<=new_to_date) ||
 									(table[row].date_reserved_from>=new_from_date && table[row].date_reserved_to>=new_to_date) ||
 									(table[row].date_reserved_from<=new_from_date && table[row].date_reserved_to<=new_to_date) ||
@@ -176,7 +190,7 @@
 												isOverwritten = 1; 
 										}				
 								}
-									//alert(isOverwritten);
+								
 									
 								if(isOverwritten>0)
 								{
@@ -190,6 +204,11 @@
 											$.ajax({type:'POST', url: 'reserve.php', data:$('#reservationForm').serialize(), success: function(response) 
 											{
 												alert(response);
+												
+												if(from_date.getFullYear() != selectedYear)
+													selectYear( from_date.getFullYear() );
+										
+												selectMonth( from_date.getMonth() + 1 );
 											}});
 										}
 									return;
@@ -200,10 +219,16 @@
 									$.ajax({type:'POST', url: 'reserve.php', data:$('#reservationForm').serialize(), success: function(response) 
 									{
 										alert(response);
-										if(from_date.getMonth() < 10)
-											createTable(from_date.getFullYear() + '-' + '0' + (from_date.getMonth() + 1) + '-' + "01");
-										else
-											createTable(from_date.getFullYear() + '-' + '0' + from_date.getMonth() + '-' + "01");
+										
+										if(from_date.getFullYear() != selectedYear)
+											selectYear( from_date.getFullYear() );
+										
+										selectMonth( from_date.getMonth() + 1 );
+										
+										//if(from_date.getMonth() < 10)
+										//	createTable(from_date.getFullYear() + '-' + '0' + (from_date.getMonth() + 1) + '-' + "01");
+										//else
+										//	createTable(from_date.getFullYear() + '-' + '0' + from_date.getMonth() + '-' + "01");
 									}});
 								}
 							});

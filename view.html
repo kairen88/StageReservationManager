@@ -152,11 +152,12 @@ function populateTable(monthSelected, stageArray)
 			colnames = new Array();
 
 			//creating month and day column models
-			monthModel = new createColModelObj("month", "center");
+			//monthModel = new createColModelObj("month", "center"); //removing month column
 			dayModel = new createColModelObj("day", "center");
-			colnames.push("Month", "Day");
+			//colnames.push("Month", "Day");//removing month column
+			colnames.push("Day");
 			
-			colmodelAry.push(monthModel);
+			//colmodelAry.push(monthModel); //removing month column
 			colmodelAry.push(dayModel);
 	
 			//populating table attributes
@@ -222,6 +223,7 @@ shrinkToFit: true,
 
                          });
 			//grid.setGridWidth(780,true);
+			 $('.ui-jqgrid-titlebar-close').remove();//removes minimize button on table titlebar
 			 
 			for(var i=0;i<=tableData.length;i++)
 				jQuery("#reservationList").jqGrid('addRowData',i+1,tableData[i]);
@@ -273,12 +275,8 @@ function callback(data,$e){
 		str += " " + key + ": " + data[key]+ "; ";
 	}
 	
-	//check if year changed, if changed, set month to jan ---- on hold do not delete
-	//if(data["year"] != selectedYear)
-	//{
-	//	data["month"] = 1; //set month as jan
-		//loadMonthBar(data["year"], data["month"]) //cannot reload month picker, messes with year range, need to add function to set month in lib
-	//}
+	
+
 	
 	
 	if(data["month"] < 10)//check if month is single digit(instead of double) format accordingly
@@ -294,12 +292,18 @@ function callback(data,$e){
 		if($('#formDiv').attr('class') == 'hidden')
 			showReservationForm()
 	}
-	
-	selectedYear = data["year"];
-	selectedMonth = data["month"];
-	
-	createTableForValidMonth(monthSelected);
 
+	createTableForValidMonth(monthSelected);
+	
+//check if year changed, if changed, set month to jan
+	if(data["year"] != selectedYear)
+	{
+		selectedYear = data["year"];
+		selectedMonth = data["month"];
+		selectMonth(01); //set month as jan
+	}
+		
+	
 }
 
 function createTableForValidMonth(monthSelected)
@@ -394,6 +398,20 @@ function showReservationForm()
 	//alert($('#formDiv').attr('class') );
 }
 
+function selectMonth(month)
+{
+	//alert( jQuery('#' + month).attr('title') );
+					
+	jQuery('#' + month).click();
+}
+
+function selectYear(year)
+{
+	//alert( jQuery('#' + month).attr('title') );
+					
+	jQuery('#' + year).click();
+}
+
 function tableInIt()
 {
 	current = new Date();
@@ -423,6 +441,24 @@ function tableInIt()
 
 }
 
+function suppressTooltip()
+{
+	// Suppress tooltip display for links that have the classname 'suppress'
+	var links = document.getElementsByTagName('a');
+	for (var i = 0; i < links.length; i++) {
+		if (links[i].className == 'suppress') {
+			links[i]._title = links[i].title;
+			links[i].onmouseover = function() { 
+				this.title = '';
+			}
+			links[i].onmouseout = function() { 
+				this.title = this._title;
+			}
+		}
+	}
+
+}
+
 function jqTest()
 {
 	jQuery("#list4").jqGrid({ datatype: "local", height: 250, colNames:['Inv No','Date', 'Client', 'Amount','Tax','Total','Notes'], colModel:[ {name:'id',index:'id', width:60, sorttype:"int"}, {name:'invdate',index:'invdate', width:90, sorttype:"date"}, {name:'name',index:'name', width:100}, {name:'amount',index:'amount', width:80, align:"right",sorttype:"float"}, {name:'tax',index:'tax', width:80, align:"right",sorttype:"float"}, {name:'total',index:'total', width:80,align:"right",sorttype:"float"}, {name:'note',index:'note', width:150, sortable:false} ], multiselect: true, caption: "Manipulating Array Data" }); var mydata = [ {id:"1",invdate:"2007-10-01",name:"test",note:"note",amount:"200.00",tax:"10.00",total:"210.00"}, {id:"2",invdate:"2007-10-02",name:"test2",note:"note2",amount:"300.00",tax:"20.00",total:"320.00"}, {id:"3",invdate:"2007-09-01",name:"test3",note:"note3",amount:"400.00",tax:"30.00",total:"430.00"}, {id:"4",invdate:"2007-10-04",name:"test",note:"note",amount:"200.00",tax:"10.00",total:"210.00"}, {id:"5",invdate:"2007-10-05",name:"test2",note:"note2",amount:"300.00",tax:"20.00",total:"320.00"}, {id:"6",invdate:"2007-09-06",name:"test3",note:"note3",amount:"400.00",tax:"30.00",total:"430.00"}, {id:"7",invdate:"2007-10-04",name:"test",note:"note",amount:"200.00",tax:"10.00",total:"210.00"}, {id:"8",invdate:"2007-10-03",name:"test2",note:"note2",amount:"300.00",tax:"20.00",total:"320.00"}, {id:"9",invdate:"2007-09-01",name:"test3",note:"note3",amount:"400.00",tax:"30.00",total:"430.00"} ]; for(var i=0;i<=mydata.length;i++) jQuery("#list4").jqGrid('addRowData',i+1,mydata[i]);
@@ -438,6 +474,7 @@ function init()
 			loadStageNameSelector()
 			loadSpecId()
 			loadDatePicker()
+			suppressTooltip()
 			//generate('alert', 'center');
 		}
 		
@@ -500,11 +537,6 @@ window.onload = init;
 </div>
 	  
 
-	  
-	  
-	  
-	  
-	  
 	  
 <div align="center">
 <div class="MonthPicker" id="MonthPicker" style="width:780px;" title="Month Picker" align="center"></div>
