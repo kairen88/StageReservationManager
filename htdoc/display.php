@@ -1,9 +1,5 @@
 <?php
-//===============Server Configuration============
-$mysql_host = "10.238.85.62";
-$mysql_database = "stage_rm";
-$mysql_user = "mpais";
-$mysql_password = "mpais123";
+include 'config.php';
 //Establish Connection with Server
 $conn        =    mysql_connect($mysql_host,$mysql_user,$mysql_password) or die('B'); 
 mysql_select_db($mysql_database,$conn) or die('Database Information is not correct');
