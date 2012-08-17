@@ -244,7 +244,7 @@ function loadMonthBar(year, month)
 {
 	$(function(){		
 		
-		DisplayMonth = year + '-' + month + '-' + '01';
+		DisplayMonth = year + '-' + month + '-' + '08';
 		
 		//alert(DisplayMonth);
 		
@@ -274,15 +274,25 @@ function callback(data,$e){
 	for(key in data) {
 		str += " " + key + ": " + data[key]+ "; ";
 	}
-	
-	
 
-	
-	
 	if(data["month"] < 10)//check if month is single digit(instead of double) format accordingly
 		monthSelected = data["year"] + '-' + '0' + data["month"] + '-' + "01";
 	else
 		monthSelected = data["year"] + '-' + data["month"] + '-' + "01";
+
+	//check if year changed, if changed, set month to jan
+	if(data["year"] != selectedYear)
+	{
+		selectedYear = data["year"];
+		selectedMonth = data["month"];
+
+		if(data["year"] == 2012)
+			selectMonth(09); //set month as sep
+		else
+			selectMonth(01); //set month as jan
+	}
+	else
+		createTableForValidMonth(monthSelected);
 
 	if(data["month"] < 9 && data["year"] == 2012)//for now hardcode data start 2012 sep
 		hideReservationForm()
@@ -292,24 +302,6 @@ function callback(data,$e){
 		if($('#formDiv').attr('class') == 'hidden')
 			showReservationForm()
 	}
-
-	
-	
-//check if year changed, if changed, set month to jan
-	if(data["year"] != selectedYear)
-	{
-		selectedYear = data["year"];
-		selectedMonth = data["month"];
-		
-		if(data["year"] == 2012)
-			selectMonth(09); //set month as sep
-		else
-			selectMonth(01); //set month as jan
-	}
-	else
-		createTableForValidMonth(monthSelected);
-		
-	
 }
 
 function createTableForValidMonth(monthSelected)
@@ -527,7 +519,7 @@ window.onload = init;
 
 	  
 <div align="center">
-<div class="MonthPicker" id="MonthPicker" style="width:780px;" align="center"></div>
+<div class="MonthPicker" id="MonthPicker" style="width:90%;" align="center"></div>
 <div id="table" align="center" style="width:95%;"></div>
 <div>	  
 
