@@ -13,7 +13,9 @@
 		
 			$(function() {
 				$( "#datepicker" ).datepicker({
+					beforeShow: function() { $("#dateFromBackground").css('color', 'transparent'); },
 					showOn: "both",
+					onClose: function() { if($("#datepicker").val() == "") $("#dateFromBackground").css('color', 'silver'); else $("#dateToBackground").css('color', 'transparent'); },
 					buttonImage: "images/calendar.gif",
 					buttonImageOnly: true,
 					dateFormat: "yy-mm-dd",
@@ -27,7 +29,9 @@
 			$(function() {
 			 date2=new Date($('#datepicker').val());
 				$( "#datepicker2" ).datepicker({
+					beforeShow: function() { $("#dateToBackground").css('color', 'transparent'); },
 					showOn: "both",
+					onClose: function() { if($("#datepicker2").val() == "") $("#dateToBackground").css('color', 'silver'); },
 					buttonImage: "images/calendar.gif",
 					buttonImageOnly: true,
 					dateFormat: "yy-mm-dd",
@@ -109,7 +113,12 @@
 	//		loadDatePicker()
 	//	}
 		
-
+function selectMonth(month)
+{
+	//alert( jQuery('#' + month).attr('title') );
+					
+	jQuery('#' + month).click();
+}
 		
 		//window.onload = init;
 		
@@ -139,6 +148,7 @@
 			{
 				//reservation from/to not null			
 				//reservation from/to date validation
+
 				if(from_date > to_date || (curr_date>from_date) || isNaN(from_date.getTime()) || isNaN(to_date.getTime()) )
 				{
 					alert("Invalid reservation period");
@@ -163,7 +173,15 @@
 						
 						if(isSpecDetailValid)
 						{
-							alert("Spec details invalid.");
+							if( confirm("Spec does not exist, would you like to add a new Spec?") )
+							{
+								$('#new_spec_id').val($('#specId').val());
+								$('#new_spec_name').val($('#specName').val());
+								$('#new_spec_lead_email').val("");
+								$('#new_DTL_email').val("");
+								$('#addNewSpecModal').reveal();
+								//$('#addspecbutton').click();
+							}
 							return ;
 						}
 						else
@@ -172,7 +190,7 @@
 							$.getJSON('display.php', function(table)
 							{
 								var isOverwritten = 0;
-								for(row in table)
+							 for(row in table)
 								{
 								 
 										
@@ -204,11 +222,6 @@
 											$.ajax({type:'POST', url: 'reserve.php', data:$('#reservationForm').serialize(), success: function(response) 
 											{
 												alert(response);
-												
-												if(from_date.getFullYear() != selectedYear)
-													selectYear( from_date.getFullYear() );
-										
-												selectMonth( from_date.getMonth() + 1 );
 											}});
 										}
 									return;
@@ -220,15 +233,19 @@
 									{
 										alert(response);
 										
+										//alert(from_date.getFullYear() + "  " + selectedYear);
+										
 										if(from_date.getFullYear() != selectedYear)
 											selectYear( from_date.getFullYear() );
 										
 										selectMonth( from_date.getMonth() + 1 );
 										
 										//if(from_date.getMonth() < 10)
-										//	createTable(from_date.getFullYear() + '-' + '0' + (from_date.getMonth() + 1) + '-' + "01");
+											//createTable(from_date.getFullYear() + '-' + '0' + (from_date.getMonth() + 1) + '-' + "01");
+										//	selectMonth("02" );
 										//else
-										//	createTable(from_date.getFullYear() + '-' + '0' + from_date.getMonth() + '-' + "01");
+											//createTable(from_date.getFullYear() + '-' + '0' + from_date.getMonth() + '-' + "01");
+										//	selectMonth("02" );
 									}});
 								}
 							});

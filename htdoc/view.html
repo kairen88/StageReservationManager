@@ -27,6 +27,8 @@
 
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
 
+<script src="js/jquery.reveal.js" type="text/javascript"></script>
+
   <!-- noty -->
   <!-- <script type="text/javascript" src="http://saran93.zxq.net/js/noty/jquery.noty.js"></script> -->
   
@@ -58,7 +60,7 @@
 	
 	   <link rel="stylesheet" type="text/css" href="css/buttons.css"/>
  
- 
+ <link rel="stylesheet" href="css/reveal.css">
  
 
 <script type="text/javascript">
@@ -103,7 +105,7 @@ function createTable(monthSelected)
 
 function populateTable(monthSelected, stageArray)
 {
-	$.getJSON('http://10.238.85.62/CSRM/display.php', function(table) {
+	$.getJSON('display.php', function(table) {
 
 		//need to get month to display from user
 		var objMonth = new Date(monthSelected);
@@ -152,12 +154,11 @@ function populateTable(monthSelected, stageArray)
 			colnames = new Array();
 
 			//creating month and day column models
-			//monthModel = new createColModelObj("month", "center"); //removing month column
+			monthModel = new createColModelObj("month", "center");
 			dayModel = new createColModelObj("day", "center");
-			//colnames.push("Month", "Day");//removing month column
-			colnames.push("Day");
+			colnames.push("Month", "Day");
 			
-			//colmodelAry.push(monthModel); //removing month column
+			colmodelAry.push(monthModel);
 			colmodelAry.push(dayModel);
 	
 			//populating table attributes
@@ -223,8 +224,7 @@ shrinkToFit: true,
 
                          });
 			//grid.setGridWidth(780,true);
-			$('.ui-jqgrid-titlebar-close').remove();//removes minimize button on table titlebar
-			
+			 
 			for(var i=0;i<=tableData.length;i++)
 				jQuery("#reservationList").jqGrid('addRowData',i+1,tableData[i]);
 }
@@ -293,21 +293,15 @@ function callback(data,$e){
 			showReservationForm()
 	}
 
-	
+	createTableForValidMonth(monthSelected);
 	
 //check if year changed, if changed, set month to jan
 	if(data["year"] != selectedYear)
 	{
 		selectedYear = data["year"];
 		selectedMonth = data["month"];
-		
-		if(data["year"] == 2012)
-			selectMonth(09); //set month as sep
-		else
-			selectMonth(01); //set month as jan
+		selectMonth(01); //set month as jan
 	}
-	else
-		createTableForValidMonth(monthSelected);
 		
 	
 }
@@ -404,19 +398,12 @@ function showReservationForm()
 	//alert($('#formDiv').attr('class') );
 }
 
-//enter month < 10 as single digit, > 10 as double digit
+//month entered has to be 2 digits eg. 05
 function selectMonth(month)
 {
 	//alert( jQuery('#' + month).attr('title') );
 					
 	jQuery('#' + month).click();
-}
-
-function selectYear(year)
-{
-	//alert( jQuery('#' + month).attr('title') );
-					
-	jQuery('#' + year).click();
 }
 
 function tableInIt()
@@ -468,6 +455,73 @@ function init()
 		
 window.onload = init;
 
+
+
+
+function submitNewSpec()
+	{
+		$.getJSON('specDropDown.php', function(table)
+		{ 
+			var isSpecDetailValid=0;
+			
+			for(row in table)
+			{
+				if(  table[row].spec_id == new_spec_id.value || table[row].spec_name == new_spec_name.value )
+					{
+					isSpecDetailValid=1;
+					}
+			}
+  
+			if(isSpecDetailValid)
+			{
+				alert("This spec has already been added.");
+				return ;
+			}
+			else {
+				//if(spec_id.value == "")
+					//{
+						//alert("Please enter the spec ID");
+						//return;
+					//}
+				//else
+				if(new_spec_name.value=="")
+					{
+						alert("Please enter the spec name");
+						return;
+					}
+				else if(new_spec_lead_email.value=="")
+					{
+						alert("Please enter the spec lead email");
+						return;
+					}
+				//else if(DTL_email.value=="")
+					//{
+						//alert("Please enter the DTL email");
+						//return;
+					//}
+				else
+					{
+						//post specEnter
+						$.ajax({type:'POST', url: 'specDetails.php', data:$('#specEnter').serialize(), success: function(response) 
+						{
+							alert(response);
+							loadSpecId();
+							$('.close-reveal-modal').click();
+						}});
+					}			
+			 }
+		});
+	}
+
+function clearNewSpecForm()
+{
+	$('#new_spec_id').val("");
+	$('#new_spec_name').val("");
+	$('#new_spec_lead_email').val("");
+	$('#new_DTL_email').val("");
+}
+
+
 </script>
 
 <style>
@@ -487,7 +541,7 @@ window.onload = init;
 <body> 
 
 <!-- <button id="hideStageRevButton" onClick="hideStageReservation()" name="hideStageRevButton">Stage Reservation </button> -->
-<a href="specEnter.html"style="margin-left:5%;">Add New Spec</a>
+<a href="#" data-reveal-id="addNewSpecModal" id="addspecbutton" onClick="clearNewSpecForm()" style="margin-left:5%;">Add New Spec</a>
 <a href="mailto:ksundarajan@paypal.com?subject=Stage Reservation App: Bug found &body=Issue:&cc=kaiteo@paypal.com,skrishnasamy@paypal.com" style="margin-left:75%;">Report a Bug</a><br/>
 
 <div id="stageReservationDiv" class="hidden"  style="width:90%;margin-top:1%;margin-bottom:1%;border:1px solid gray;margin-left:5%;" >
@@ -523,15 +577,33 @@ window.onload = init;
 	  </div>
 
 </div>
-	  
-
-	  
+	  	  
 <div align="center">
-<div class="MonthPicker" id="MonthPicker" style="width:780px;" align="center"></div>
+<div class="MonthPicker" id="MonthPicker" style="width:780px;" title="Month Picker" align="center"></div>
 <div id="table" align="center" style="width:90%;"></div>
 <div>	  
 
 <table id="list4"></table>
+
+<div id="addNewSpecModal" class="reveal-modal">
+     <h1>New Spec</h1>
+     
+<form name="specEnter" id="specEnter"  method="post">
+Spec ID: <input type="text" id="new_spec_id" name="spec_id" /> 
+</br></br>
+Spec Name: <input type="text" id="new_spec_name" name="spec_name" /> 
+</br></br>
+Spec lead email: <input type="text" id="new_spec_lead_email" name="spec_lead_email"/> 
+</br></br>
+DL-email: <input type="text" id="new_DTL_email" name="DTL_email"/> 
+</br></br>
+
+
+</form>
+<button id="btnRegister" onClick="submitNewSpec()" name="btnRegister" >Submit </button>
+	 
+     <a class="close-reveal-modal">&#215;</a>
+</div>
 	  
 </body> 
 </html></body> 

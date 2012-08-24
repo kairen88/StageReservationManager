@@ -195,7 +195,7 @@ if(isset($_POST['stageName']))
 					if($res)
 					{
 						
-						echo "\nStage reserved successfully.";
+						echo "Stage reserved successfully.";
 					}
 
 }
