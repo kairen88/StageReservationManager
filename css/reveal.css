@@ -37,6 +37,8 @@
 	.reveal-modal.large 		{ width: 600px; margin-left: -340px;}
 	.reveal-modal.xlarge 		{ width: 800px; margin-left: -440px;}
 	
+	.guidelines-modal { width: 600px; margin-left: -340px;}
+	
 	.reveal-modal .close-reveal-modal {
 		font-size: 22px;
 		line-height: .5;

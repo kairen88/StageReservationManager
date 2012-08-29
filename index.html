@@ -193,8 +193,12 @@ var mydata = tableData,
                 colModel:colmodel,
 
                 pager: '#pager',
+				
+				pgtext: null,  
+				
+				pgbuttons:false,
 
-                viewrecords: true,
+                viewrecords: false,
 				
 				autowidth: false,
 shrinkToFit: true,
@@ -530,27 +534,41 @@ window.onload = init;
 
 function backgroundFade(){
 	jQuery("#specId").focus(function() { 
-		$(specIdBackground).css('color','transparent'); 
+		if($("#specId").val() == "")
+			$(specIdBackground).css('color','silver'); 
+		else
+			$(specIdBackground).css('color','transparent'); 
 	});
 	
 	jQuery("#specId").focusout(function() { 
 		if($("#specId").val() == "")
-			$(specIdBackground).css('color','silver'); 
+			$(specIdBackground).css('color','DimGrey '); 
+		
+	});
+	
+	jQuery("#specId").keypress(function() { 
+		$(specIdBackground).css('color','transparent'); 
+	});
+	
+	jQuery("#specName").focus(function() { 
+		if($("#specName").val() == "")
+			$(specNameBackground).css('color','silver'); 
 		else
 			$(specNameBackground).css('color','transparent'); 
 	});
 	
-	jQuery("#specName").focus(function() { 
-		$(specNameBackground).css('color','transparent'); 
-	});
-	
 	jQuery("#specName").focusout(function() { 
 		if($("#specName").val() == "")
-			$(specNameBackground).css('color','silver'); 
-		else
+			$(specNameBackground).css('color','DimGrey'); 
+		if($("#specId").val() != "")
 			$(specIdBackground).css('color','transparent'); 
 	});
+	
+	jQuery("#specName").keypress(function() { 
+		$(specNameBackground).css('color','transparent'); 
+	});
 }
+
 </script>
 
 <style>
@@ -568,82 +586,101 @@ function backgroundFade(){
 </head> 
 
 <body> 
-
+<div id="body">
 <!-- <button id="hideStageRevButton" onClick="hideStageReservation()" name="hideStageRevButton">Stage Reservation </button> -->
 <div style="position:fixed;z-index:99;width:100%;background:#FFF;padding-top:0%;">
-<a href="#" data-reveal-id="addNewSpecModal" id="addspecbutton" onClick="clearNewSpecForm()" style="margin-left:5%;">Add New Spec</a>
-<a href="mailto:ksundarajan@paypal.com?subject=Stage Reservation App: Bug found &body=Issue:&cc=kaiteo@paypal.com,skrishnasamy@paypal.com" style="margin-left:75%;">Report a Bug</a><br/>
-
-<div id="stageReservationDiv" class="hidden"  style="width:90%;margin-bottom:1%;border:1px solid gray;margin-left:5%;" >
-<h3 style="margin-bottom:0%;margin-top:0%;">Guidelines</h3>
-<ul>
-  <li style=" font-size:13px;">    Reserve a stage for 5 workdays max </li>
-  <li style="padding-top:0.5%; font-size:13px;">   If you want to share a stage, contact the spec lead of the spec for which the stage is reserved.</li>
-  <li style="padding-top:0.5%; font-size:13px;">      STAGE2VM4229 is reserved for Compliance PD BAU. Owner Karthick</li>
-  <li style="padding-top:0.5%; font-size:13px;">        By default, these following people have "owner" rights of all the stages: Karthick Sundararajan [<a href="mailto:ksundarajan@paypal.com?subject=BAU Stage Reservation">ksundarajan</a>]. Contact them to get access. </li>
-  <li style="padding-top:0.5%; font-size:13px;">        Best viewed in Firefox, Chrome and IE 9, refer to <a href="http://10.238.85.62/CSRM/releasenotes.html"> Release Notes </a> for additional features and documentation. </li>
-  </ul>
-	<div id="formDiv">
-		<h4 style="margin-bottom:0%;margin-top:0%;">Reservation Form :</h4>
+<div style="margin-left:81%;">
+<a href="#" data-reveal-id="guidelinesModal" id="guidelinesbutton" style="margin-right:0%; text-decoration: none; color:black; font-family:Arial; font-size:10pt;">Guidelines</a> |
+<a href="#" data-reveal-id="addNewSpecModal" id="addspecbutton" onClick="clearNewSpecForm()" style="margin-right:0%; text-decoration: none; color:black; font-family:Arial; font-size:10pt; ">Add New Spec</a> |
+<a href="mailto:kaiteo@paypal.com,skrishnasamy@paypal.com?subject=Stage Reservation App: Bug found &body=Issue:&cc=ksundarajan@paypal.com" style="padding-left:1%; text-decoration: none; color:black; font-family:Arial; font-size:10pt;">Report a Bug</a><br/>
+</div>
+<img src="images/CSRM-Logo.jpg" width="400px" height="100"/>
+	<div id="formDiv" style="margin-left:5%;">
 		
 		  <form name="sample" id="reservationForm" action="reserve.php" method="post" style="margin-bottom:0%">
 
-			  Stage Name<select name="stageName" id="stageNameSelector">
-							<option value="">Select...</option>
+			  <select name="stageName" id="stageNameSelector">
+							<option value="">Stage name...</option>
 						</select>
 						
-				<span id="dateFromBackground" style="color: silver; font-size: 14px; left: 120px; position: relative; top: 0px;">Date From</span>
-			  <input type="text" id="datepicker" name="dateFrom" required="true">
+				<span id="dateFromBackground" style="color: DimGrey; font-size: 14px; position: absolute;">Date From</span>
+			  <input type="text" id="datepicker" name="dateFrom" required="true" style="position: relative;background: transparent;">
 				
-				<span id="dateToBackground" style="color: silver; font-size: 14px; left: 110px; position: relative; top: 0px;">Date To</span>
-			  <input type="text" id="datepicker2" name="dateTo" style="background: transparent;" required="true" >
+				<span id="dateToBackground" style="color: DimGrey; font-size: 14px; position: absolute;">Date To</span>
+			  <input type="text" id="datepicker2" name="dateTo" style="position: relative;background: transparent;" required="true" >
 				
-				<span id="specIdBackground" style="color: silver; font-size: 14px; left: 120px; position: relative; top: 0px;">Spec ID</span>
-			  <input type="text" name="specId" id="specId" style="background: transparent;" />
+				<span id="specIdBackground" style="color: DimGrey ; font-size: 14px; position: absolute;">Spec ID</span>
+			  <input type="text" name="specId" id="specId" style="position: relative;background: transparent;" />
 	 
-				<span id="specNameBackground" style="color: silver; font-size: 14px; left: 120px; position: relative; top: 0px;">Spec Name</span>
-			  <input type="text" name="specName" id="specName" style="background: transparent;" />
+				<span id="specNameBackground" style="color: DimGrey ; font-size: 14px; position: absolute;">Spec Name</span>
+			  <input type="text" name="specName" id="specName" style="position: relative;background: transparent;" />
 			
 			
 		  </form>
 		  <button id="btnRegister2" onClick="submitForm()" name="btnRegister2" style="margin-top:20px;">Submit </button>
 	  </div>
-
-</div>
 	  
-<div class="MonthPicker" id="MonthPicker" style="width:90%;" align="center"></div>
+	  <br/> 
+	  <div>  
+		<div class="MonthPicker" id="MonthPicker" style="width:90%; " align="center"></div>
+
+		<div id="ajaxLoadingDiv">
+			<img src="images/ajax-loader.gif" width="100px" height="100"/>
+		</div>
+
+	  </div>
 
 <div id="addNewSpecModal" class="reveal-modal">
-     <h1>New Spec</h1>
-     
-<form name="specEnter" id="specEnter"  method="post">
-Spec ID: <input type="text" id="new_spec_id" name="spec_id" /> 
-</br></br>
-Spec Name: <input type="text" id="new_spec_name" name="spec_name" /> 
-</br></br>
-Spec lead email: <input type="text" id="new_spec_lead_email" name="spec_lead_email"/> 
-</br></br>
-DL-email: <input type="text" id="new_DTL_email" name="DTL_email"/> 
-</br></br>
+	<div id="stylized" class="myform">
+	<h1>ADD NEW SPEC</h1>
+	<p>Please fill in the following details to add a new spec</p>
+		 
+		<form name="specEnter" id="specEnter"  method="post">
+			<label>Spec ID: </label>
+			<input type="text" id="new_spec_id" name="spec_id" /> 
+			</br></br>
+			<label>Spec Name: </label>
+			<input type="text" id="new_spec_name" name="spec_name" /> 
+			</br></br>
+			<label>Spec lead email: </label>
+			<input type="text" id="new_spec_lead_email" name="spec_lead_email"/> 
+			</br></br>
+			<label>DL-email: </label>
+			<input type="text" id="new_DTL_email" name="DTL_email"/> 
+			</br></br>
+		</form>
+		<button id="btnRegister" onClick="submitNewSpec()" name="btnRegister" >Submit </button>
+		 
+		 <a class="close-reveal-modal">&#215;</a>
+	</div>
+</div>
 
-
-</form>
-<button id="btnRegister" onClick="submitNewSpec()" name="btnRegister" >Submit </button>
+<div id="guidelinesModal" class="reveal-modal guidelines-modal">
+     <h1>Guidelines</h1>
+	<p></p>
+     <ul>
+		  <li style=" font-size:13px;">    Reserve a stage for 5 workdays max </li>
+		  <li style="padding-top:0.5%; font-size:13px;">   If you want to share a stage, contact the spec lead of the spec for which the stage is reserved.</li>
+		  <li style="padding-top:0.5%; font-size:13px;">      STAGE2VM4229 is reserved for Compliance PD BAU. Owner Karthick</li>
+		  <li style="padding-top:0.5%; font-size:13px;">        By default, "owner" rights for all stages belong to <a href="mailto:ksundarajan@paypal.com?subject=BAU Stage Reservation">Karthick Sundararajan</a>. Please contact him to get access. </li>
+		  <li style="padding-top:0.5%; font-size:13px;">        Best viewed in Firefox, Chrome and IE 9, refer to <a href="http://10.238.85.62/CSRM/releasenotes.html"> Release Notes </a> for additional features and documentation. </li>
+	 </ul>
 	 
      <a class="close-reveal-modal">&#215;</a>
 </div>
 
-</div>
-<div align="center">
-<div style="position:absolute;padding-top:30%;">
-
-<div id="table" align="center" style="width:95%;"></div>
 
 </div>
 
+<div style="background:#D8D8D8; width:100%;">
+	<div style="position:relative;padding-top:280px;">
+		<div align="center">
+		<div id="table" align="center" style="width:95%;"></div>
+		</div>
+	</div>
 </div>	  
 
-	  
+</div>	  
 </body> 
 </html></body> 
 </html>

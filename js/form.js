@@ -1,3 +1,24 @@
+function searchSpec()
+{
+//alert("TEST");
+var s=0;
+$.getJSON('specDropDown.php', function(table){
+ for(row in table)
+ {
+  if( table[row].spec_name==document.forms['viewSpec']['specName'].value && table[row].spec_id==document.forms['viewSpec']['specId'].value)
+  {
+  alert("Spec name: "+table[row].spec_name+"\nSpec ID: "+table[row].spec_id+"\nSpec lead email: "+table[row].spec_lead_email+"\nDL email: "+table[row].dtl_email);
+  s=1;
+  }
+
+}
+  if(!s)
+  alert("Entered spec does not exist.");
+})
+
+}
+
+
 		function loadDatePicker()
 		{
 		var today = new Date();
@@ -15,7 +36,7 @@
 				$( "#datepicker" ).datepicker({
 					beforeShow: function() { $("#dateFromBackground").css('color', 'transparent'); },
 					showOn: "both",
-					onClose: function() { if($("#datepicker").val() == "") $("#dateFromBackground").css('color', 'silver'); else $("#dateToBackground").css('color', 'transparent'); },
+					onClose: function() { if($("#datepicker").val() == "") $("#dateFromBackground").css('color', 'DimGrey'); else $("#dateToBackground").css('color', 'transparent'); },
 					buttonImage: "images/calendar.gif",
 					buttonImageOnly: true,
 					dateFormat: "yy-mm-dd",
@@ -31,7 +52,7 @@
 				$( "#datepicker2" ).datepicker({
 					beforeShow: function() { $("#dateToBackground").css('color', 'transparent'); },
 					showOn: "both",
-					onClose: function() { if($("#datepicker2").val() == "") $("#dateToBackground").css('color', 'silver'); },
+					onClose: function() { if($("#datepicker2").val() == "") $("#dateToBackground").css('color', 'DimGrey'); },
 					buttonImage: "images/calendar.gif",
 					buttonImageOnly: true,
 					dateFormat: "yy-mm-dd",
@@ -85,7 +106,10 @@
 			select: function( event, ui ) {
 				for(spec in specDetails)
 					if(ui.item.value == specDetails[spec].spec_name)
+					{
 						$("input#specId").val(specDetails[spec].spec_id);
+						$(specIdBackground).css('color','transparent'); 
+					}
 			}
 			
 			});
@@ -96,7 +120,10 @@
 			select: function( event, ui ) {
 				for(spec in specDetails)
 					if(ui.item.value == specDetails[spec].spec_id)
+					{
 						$("input#specName").val(specDetails[spec].spec_name);
+						$(specNameBackground).css('color','transparent'); 
+						}
 			}
 			
 			
@@ -218,9 +245,13 @@ function selectMonth(month)
 										
 									else if(confirm("Do you wish to overwrite an existing reservation?"))
 										{
+											//show ajax loader
+											$("#ajaxLoadingDiv").show();
 											//post reservation
 											$.ajax({type:'POST', url: 'reserve.php', data:$('#reservationForm').serialize(), success: function(response) 
 											{
+												//hide ajax loader
+												$("#ajaxLoadingDiv").hide();
 												alert(response);
 											}});
 										}
@@ -228,9 +259,14 @@ function selectMonth(month)
 								}
 								else
 								{
+									//show ajax loader
+									$("#ajaxLoadingDiv").show();
 									//post reservation
 									$.ajax({type:'POST', url: 'reserve.php', data:$('#reservationForm').serialize(), success: function(response) 
 									{
+										//hide ajax loader
+										$("#ajaxLoadingDiv").hide();
+										
 										alert(response);
 										
 										//alert(from_date.getFullYear() + "  " + selectedYear);

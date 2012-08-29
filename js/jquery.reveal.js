@@ -68,10 +68,10 @@
 				if(!locked) {
 					lockModal();
 					if(options.animation == "fadeAndPop") {
-						modal.css({'top': $(document).scrollTop()-topOffset, 'opacity' : 0, 'visibility' : 'visible'});
+						modal.css({'top': topOffset, 'opacity' : 0, 'visibility' : 'visible'});
 						modalBG.fadeIn(options.animationspeed/2);
 						modal.delay(options.animationspeed/2).animate({
-							"top": $(document).scrollTop()+topMeasure + 'px',
+							"top": topMeasure + 'px',
 							"opacity" : 1
 						}, options.animationspeed,unlockModal());					
 					}

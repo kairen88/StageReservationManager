@@ -5,7 +5,7 @@ $conn        =    mysql_connect($mysql_host,$mysql_user,$mysql_password) or die(
 mysql_select_db($mysql_database,$conn) or die('Database Information is not correct');
 
 
-$q= "SELECT spec_id,spec_name FROM spec ";
+$q= "SELECT * FROM spec ";
 $res    =    mysql_query($q); 
 $table = array();
 
