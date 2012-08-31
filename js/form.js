@@ -255,7 +255,12 @@ function selectMonth(month)
 											{
 												//hide ajax loader
 												$("#ajaxLoadingDiv").hide();
-												alert(response);
+												alert(response);												
+
+												if(from_date.getFullYear() != selectedYear)
+													selectYear( from_date.getFullYear() );
+												selectMonth( from_date.getMonth() + 1 );
+
 											}});
 										}
 									return;
@@ -279,12 +284,6 @@ function selectMonth(month)
 										
 										selectMonth( from_date.getMonth() + 1 );
 										
-										//if(from_date.getMonth() < 10)
-											//createTable(from_date.getFullYear() + '-' + '0' + (from_date.getMonth() + 1) + '-' + "01");
-										//	selectMonth("02" );
-										//else
-											//createTable(from_date.getFullYear() + '-' + '0' + from_date.getMonth() + '-' + "01");
-										//	selectMonth("02" );
 									}});
 								}
 							});
