@@ -27,10 +27,6 @@
 
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
 
-<script src="js/jquery.reveal.js" type="text/javascript"></script>
-
-<script src="js/jquery.ezpz_tooltip.js" type="text/javascript"></script>
-
   <!-- noty -->
   <!-- <script type="text/javascript" src="http://saran93.zxq.net/js/noty/jquery.noty.js"></script> -->
   
@@ -62,7 +58,7 @@
 	
 	   <link rel="stylesheet" type="text/css" href="css/buttons.css"/>
  
- <link rel="stylesheet" href="css/reveal.css">
+ 
  
 
 <script type="text/javascript">
@@ -107,7 +103,7 @@ function createTable(monthSelected)
 
 function populateTable(monthSelected, stageArray)
 {
-	$.getJSON('display.php', function(table) {
+	$.getJSON('http://10.238.85.62/CSRM/display.php', function(table) {
 
 		//need to get month to display from user
 		var objMonth = new Date(monthSelected);
@@ -195,12 +191,8 @@ var mydata = tableData,
                 colModel:colmodel,
 
                 pager: '#pager',
-				
-				pgtext: null,  
-				
-				pgbuttons:false,
 
-                viewrecords: false,
+                viewrecords: true,
 				
 				autowidth: false,
 shrinkToFit: true,
@@ -235,9 +227,6 @@ shrinkToFit: true,
 			
 			for(var i=0;i<=tableData.length;i++)
 				jQuery("#reservationList").jqGrid('addRowData',i+1,tableData[i]);
-				
-			//set hover divs for table cells
-			createHoverContent();
 }
 
 function createColModelObj(name, align)
@@ -290,6 +279,9 @@ function callback(data,$e){
 		monthSelected = data["year"] + '-' + '0' + data["month"] + '-' + "01";
 	else
 		monthSelected = data["year"] + '-' + data["month"] + '-' + "01";
+		
+		
+		
 
 	//check if year changed, if changed, set month to jan
 	if(data["year"] != selectedYear)
@@ -304,7 +296,10 @@ function callback(data,$e){
 	}
 	else
 		createTableForValidMonth(monthSelected);
-
+	
+	
+	
+	
 	if(data["month"] < 9 && data["year"] == 2012)//for now hardcode data start 2012 sep
 		hideReservationForm()
 	else
@@ -313,6 +308,12 @@ function callback(data,$e){
 		if($('#formDiv').attr('class') == 'hidden')
 			showReservationForm()
 	}
+
+	
+	
+
+		
+	
 }
 
 function createTableForValidMonth(monthSelected)
@@ -422,115 +423,6 @@ function selectYear(year)
 	jQuery('#' + year).click();
 }
 
-function submitNewSpec()
-	{
-		$.getJSON('specDropDown.php', function(table)
-		{ 
-			var isSpecDetailValid=0;
-			
-			for(row in table)
-			{
-				if(  table[row].spec_id == new_spec_id.value || table[row].spec_name == new_spec_name.value )
-					{
-					isSpecDetailValid=1;
-					}
-			}
-  
-			if(isSpecDetailValid)
-			{
-				alert("This spec has already been added.");
-				return ;
-			}
-			else {
-				//if(spec_id.value == "")
-					//{
-						//alert("Please enter the spec ID");
-						//return;
-					//}
-				//else
-				if(new_spec_name.value=="")
-					{
-						alert("Please enter the spec name");
-						return;
-					}
-				else if(new_spec_lead_email.value=="")
-					{
-						alert("Please enter the spec lead email");
-						return;
-					}
-				//else if(DTL_email.value=="")
-					//{
-						//alert("Please enter the DTL email");
-						//return;
-					//}
-				else
-					{
-						//post specEnter
-						$.ajax({type:'POST', url: 'specDetails.php', data:$('#specEnter').serialize(), success: function(response) 
-						{
-							alert(response);
-							loadSpecId();
-							$('.close-reveal-modal').click();
-						}});
-					}			
-			 }
-		});
-	}
-
-function clearNewSpecForm()
-{
-	$('#new_spec_id').val("");
-	$('#new_spec_name').val("");
-	$('#new_spec_lead_email').val("");
-	$('#new_DTL_email').val("");
-}
-
-function createHoverContent()
-{
-	$.getJSON('specDropDown.php', function(specDetails) {
-
-		for(spec in specDetails)
-		{
-			var divTag = document.createElement("div");
-			divTag.id = specDetails[spec].spec_id+"HoverDiv"; 
-			divTag.onmouseover=function (){
-											$(this).show()
-											$(this).css('opacity','1');
-										   };
-			divTag.onmouseout=function (){
-											$(this).hide();
-											$(this).css('opacity','0.4');
-										  };
-			
-			divTag.className = "tooltip";
-			divTag.innerHTML = '<span>' + specDetails[spec].spec_id + '</span>' + '</br>' + '<span>' + specDetails[spec].spec_name + '</span>' + '<p></p>' + 'Spec Lead Email: <a href="mailto:' + specDetails[spec].spec_lead_email + '?subject=Stage Reservation">' + specDetails[spec].spec_lead_email + '</a>' + '</br>' + 'DL Email: <a href="mailto:' + specDetails[spec].dtl_email + '?subject=Stage Reservation">' + specDetails[spec].dtl_email + '</a>' + '</br></br>'; 
-			
-			$("#hoverContentDiv").append(divTag);
-
-			setHover(specDetails[spec].spec_id)
-		}
-	});
-}
-
-function setHover(spec_id)
-{
-	//$('[title~=Canada]').ezpz_tooltip({contentId:"53436HoverDiv"});
-	//alert($('#testLInk').html());
-	//$('#viewspecbutton').ezpz_tooltip({contentId:"53436HoverDiv"});
-	//alert($('[title~="53436"]').html());
-	$('[title~="'+ spec_id +'"]').ezpz_tooltip({
-									contentId: spec_id + 'HoverDiv',
-									contentPosition: 'rightStatic',
-									stayOnContent: true,
-									offset: 0
-									});
-}
-
-function jqTest()
-{
-	jQuery("#list4").jqGrid({ datatype: "local", height: 250, colNames:['Inv No','Date', 'Client', 'Amount','Tax','Total','Notes'], colModel:[ {name:'id',index:'id', width:60, sorttype:"int"}, {name:'invdate',index:'invdate', width:90, sorttype:"date"}, {name:'name',index:'name', width:100}, {name:'amount',index:'amount', width:80, align:"right",sorttype:"float"}, {name:'tax',index:'tax', width:80, align:"right",sorttype:"float"}, {name:'total',index:'total', width:80,align:"right",sorttype:"float"}, {name:'note',index:'note', width:150, sortable:false} ], multiselect: true, caption: "Manipulating Array Data" }); var mydata = [ {id:"1",invdate:"2007-10-01",name:"test",note:"note",amount:"200.00",tax:"10.00",total:"210.00"}, {id:"2",invdate:"2007-10-02",name:"test2",note:"note2",amount:"300.00",tax:"20.00",total:"320.00"}, {id:"3",invdate:"2007-09-01",name:"test3",note:"note3",amount:"400.00",tax:"30.00",total:"430.00"}, {id:"4",invdate:"2007-10-04",name:"test",note:"note",amount:"200.00",tax:"10.00",total:"210.00"}, {id:"5",invdate:"2007-10-05",name:"test2",note:"note2",amount:"300.00",tax:"20.00",total:"320.00"}, {id:"6",invdate:"2007-09-06",name:"test3",note:"note3",amount:"400.00",tax:"30.00",total:"430.00"}, {id:"7",invdate:"2007-10-04",name:"test",note:"note",amount:"200.00",tax:"10.00",total:"210.00"}, {id:"8",invdate:"2007-10-03",name:"test2",note:"note2",amount:"300.00",tax:"20.00",total:"320.00"}, {id:"9",invdate:"2007-09-01",name:"test3",note:"note3",amount:"400.00",tax:"30.00",total:"430.00"} ]; for(var i=0;i<=mydata.length;i++) jQuery("#list4").jqGrid('addRowData',i+1,mydata[i]);
-}
-
 function tableInIt()
 {
 	current = new Date();
@@ -560,62 +452,25 @@ function tableInIt()
 
 }
 
-
+function jqTest()
+{
+	jQuery("#list4").jqGrid({ datatype: "local", height: 250, colNames:['Inv No','Date', 'Client', 'Amount','Tax','Total','Notes'], colModel:[ {name:'id',index:'id', width:60, sorttype:"int"}, {name:'invdate',index:'invdate', width:90, sorttype:"date"}, {name:'name',index:'name', width:100}, {name:'amount',index:'amount', width:80, align:"right",sorttype:"float"}, {name:'tax',index:'tax', width:80, align:"right",sorttype:"float"}, {name:'total',index:'total', width:80,align:"right",sorttype:"float"}, {name:'note',index:'note', width:150, sortable:false} ], multiselect: true, caption: "Manipulating Array Data" }); var mydata = [ {id:"1",invdate:"2007-10-01",name:"test",note:"note",amount:"200.00",tax:"10.00",total:"210.00"}, {id:"2",invdate:"2007-10-02",name:"test2",note:"note2",amount:"300.00",tax:"20.00",total:"320.00"}, {id:"3",invdate:"2007-09-01",name:"test3",note:"note3",amount:"400.00",tax:"30.00",total:"430.00"}, {id:"4",invdate:"2007-10-04",name:"test",note:"note",amount:"200.00",tax:"10.00",total:"210.00"}, {id:"5",invdate:"2007-10-05",name:"test2",note:"note2",amount:"300.00",tax:"20.00",total:"320.00"}, {id:"6",invdate:"2007-09-06",name:"test3",note:"note3",amount:"400.00",tax:"30.00",total:"430.00"}, {id:"7",invdate:"2007-10-04",name:"test",note:"note",amount:"200.00",tax:"10.00",total:"210.00"}, {id:"8",invdate:"2007-10-03",name:"test2",note:"note2",amount:"300.00",tax:"20.00",total:"320.00"}, {id:"9",invdate:"2007-09-01",name:"test3",note:"note3",amount:"400.00",tax:"30.00",total:"430.00"} ]; for(var i=0;i<=mydata.length;i++) jQuery("#list4").jqGrid('addRowData',i+1,mydata[i]);
+}
 
 function init()
 		{
 			//jqTest() //to test if JqGrid table is working
 			//loadMonthBar()
 			tableInIt()
-			backgroundFade()
 			
 			//load init from form.js
 			loadStageNameSelector()
 			loadSpecId()
 			loadDatePicker()
-			
-			createHoverContent()
-			
+			//generate('alert', 'center');
 		}
 		
 window.onload = init;
-
-function backgroundFade(){
-	jQuery("#specId").focus(function() { 
-		if($("#specId").val() == "")
-			$(specIdBackground).css('color','silver'); 
-		else
-			$(specIdBackground).css('color','transparent'); 
-	});
-	
-	jQuery("#specId").focusout(function() { 
-		if($("#specId").val() == "")
-			$(specIdBackground).css('color','DimGrey '); 
-		
-	});
-	
-	jQuery("#specId").keypress(function() { 
-		$(specIdBackground).css('color','transparent'); 
-	});
-	
-	jQuery("#specName").focus(function() { 
-		if($("#specName").val() == "")
-			$(specNameBackground).css('color','silver'); 
-		else
-			$(specNameBackground).css('color','transparent'); 
-	});
-	
-	jQuery("#specName").focusout(function() { 
-		if($("#specName").val() == "")
-			$(specNameBackground).css('color','DimGrey'); 
-		if($("#specId").val() != "")
-			$(specIdBackground).css('color','transparent'); 
-	});
-	
-	jQuery("#specName").keypress(function() { 
-		$(specNameBackground).css('color','transparent'); 
-	});
-}
 
 </script>
 
@@ -629,162 +484,59 @@ function backgroundFade(){
 	#btnRegister2 { float:left; }
 	
 	#stageReservationDiv { overflow: hidden; }
-	
-	.tooltip
-	{
-		display: none;        /* required */
-		position: absolute;   /* required */
-		padding: 10px;
-		font-family:Arial;
-		border: 1px solid DarkGray ;
-		background-color: white;
-		border-radius: 10px;
-		-moz-border-radius: 10px;
-		-webkit-border-radius: 10px;
-		-khtml-border-radius: 10px;
-		-moz-box-shadow: 3px 3px 4px #000;
-		-webkit-box-shadow: 3px 3px 4px #000;
-		box-shadow: 3px 3px 4px #000;
-		opacity:0.4;
-		<!-- text-align:center; -->
-		z-index:999;
-	}
-	
-	.tooltip p
-	{
-		border-bottom: 1px solid rgb(183, 221, 242);
-	}
-	
-	.tooltip span
-	{
-		<!-- font-weight:600; -->
-	}
-	
-	
 </style>
 
 </head> 
 
-<body > 
-<div >
+<body> 
+
 <!-- <button id="hideStageRevButton" onClick="hideStageReservation()" name="hideStageRevButton">Stage Reservation </button> -->
-<div style="position:fixed;z-index:99;width:100%;background:#FFF;padding-top:0%;">
-<div style="margin-left:72%;">
-<a href="#" data-reveal-id="viewspecModal" id="viewspecbutton" style="margin-right:0%; text-decoration: none; color:black; font-family:Arial; font-size:10pt;">View Spec details</a> |
-<a href="#" data-reveal-id="guidelinesModal" id="guidelinesbutton" style="margin-right:0%; text-decoration: none; color:black; font-family:Arial; font-size:10pt;">Guidelines</a> |
-<a href="#" data-reveal-id="addNewSpecModal" id="addspecbutton" onClick="clearNewSpecForm()" style="margin-right:0%; text-decoration: none; color:black; font-family:Arial; font-size:10pt; ">Add New Spec</a> |
-<a href="mailto:kaiteo@paypal.com,skrishnasamy@paypal.com?subject=Stage Reservation App: Bug found &body=Issue:&cc=ksundarajan@paypal.com" style="padding-left:1%; text-decoration: none; color:black; font-family:Arial; font-size:10pt;">Report a Bug</a><br/>
-</div>
-<img src="images/CSRM-Logo.jpg" width="400px" height="100"/>
-	<div id="formDiv" style="margin-left:5%;">
+<a href="specEnter.html"style="margin-left:5%;">Add New Spec</a>
+<a href="mailto:ksundarajan@paypal.com?subject=Stage Reservation App: Bug found &body=Issue:&cc=kaiteo@paypal.com,skrishnasamy@paypal.com" style="margin-left:75%;">Report a Bug</a><br/>
+
+<div id="stageReservationDiv" class="hidden"  style="width:90%;margin-top:1%;margin-bottom:1%;border:1px solid gray;margin-left:5%;" >
+<h3 style="margin-bottom:0%;margin-top:0%;">Guidelines</h3>
+<ul>
+  <li style=" font-size:13px;">    Reserve a stage for 5 workdays max </li>
+  <li style="padding-top:0.5%; font-size:13px;">   If you want to share a stage, contact the spec lead of the spec for which the stage is reserved.</li>
+  <li style="padding-top:0.5%; font-size:13px;">        Maintain the reservation table below; after 31 days, move the past dates from the top of the table to the bottom, and increment the month</li>
+  <li style="padding-top:0.5%; font-size:13px;">      STAGE2VM4229 is reserved for Compliance PD BAU. Owner Karthick</li>
+  <li style="padding-top:0.5%; font-size:13px;">        By default, these following people have "owner" rights of all the stages: Karthick Sundararajan [ksundarajan]. Contact them to get access. </li>
+  <li style="padding-top:0.5%; font-size:13px;">        Best viewed in Firefox, Chrome and IE 9. </li>
+  </ul>
+	<div id="formDiv">
+		<h4 style="margin-bottom:0%;margin-top:0%;">Reservation Form :</h4>
 		
 		  <form name="sample" id="reservationForm" action="reserve.php" method="post" style="margin-bottom:0%">
 
-			  <select name="stageName" id="stageNameSelector">
-							<option value="">Stage name...</option>
+			  Stage Name<select name="stageName" id="stageNameSelector">
+							<option value="">Select...</option>
 						</select>
-						
-				<span id="dateFromBackground" style="color: DimGrey; font-size: 14px; position: absolute;">Date From</span>
-			  <input type="text" id="datepicker" name="dateFrom" required="true" style="position: relative;background: transparent;">
-				
-				<span id="dateToBackground" style="color: DimGrey; font-size: 14px; position: absolute;">Date To</span>
-			  <input type="text" id="datepicker2" name="dateTo" style="position: relative;background: transparent;" required="true" >
-				
-				<span id="specIdBackground" style="color: DimGrey ; font-size: 14px; position: absolute;">Spec ID</span>
-			  <input type="text" name="specId" id="specId" style="position: relative;background: transparent;" />
 	 
-				<span id="specNameBackground" style="color: DimGrey ; font-size: 14px; position: absolute;">Spec Name</span>
-			  <input type="text" name="specName" id="specName" style="position: relative;background: transparent;" />
+			  From:<input type="text" id="datepicker" name="dateFrom" required="true">
+
+			  To:<input type="text" id="datepicker2" name="dateTo" required="true" >
+
+			  Spec Id:<input type="text" name="specId" id="specId" />
+	 
+			  Spec Name:<input type="text" name="specName" id="specName" />
 			
 			
 		  </form>
 		  <button id="btnRegister2" onClick="submitForm()" name="btnRegister2" style="margin-top:20px;">Submit </button>
 	  </div>
+
+</div>
 	  
-	  <br/> 
-	  <div>  
-		<div class="MonthPicker" id="MonthPicker" style="width:90%; " align="center"></div>
 
-		<div id="ajaxLoadingDiv">
-			<img src="images/ajax-loader.gif" width="100px" height="100"/>
-		</div>
+	  
+<div align="center">
+<div class="MonthPicker" id="MonthPicker" style="width:90%;" align="center"></div>
+<div id="table" align="center" style="width:95%;"></div>
+<div>	  
 
-	  </div>
-
-<div id="addNewSpecModal" class="reveal-modal">
-	<div id="stylized" class="myform">
-	<h1>ADD NEW SPEC</h1>
-	<p>Please fill in the following details to add a new spec</p>
-		 
-		<form name="specEnter" id="specEnter"  method="post">
-			<label>Spec ID: </label>
-			<input type="text" id="new_spec_id" name="spec_id" /> 
-			</br></br>
-			<label>Spec Name: </label>
-			<input type="text" id="new_spec_name" name="spec_name" /> 
-			</br></br>
-			<label>Spec lead email: </label>
-			<input type="text" id="new_spec_lead_email" name="spec_lead_email"/> 
-			</br></br>
-			<label>DL-email: </label>
-			<input type="text" id="new_DTL_email" name="DTL_email"/> 
-			</br></br>
-		</form>
-		<button id="btnRegister" onClick="submitNewSpec()" name="btnRegister" >Submit </button>
-		 
-		 <a class="close-reveal-modal">&#215;</a>
-	</div>
-</div>
-
-<div id="guidelinesModal" class="reveal-modal guidelines-modal">
-     <h1>Guidelines</h1>
-	<p></p>
-     <ul>
-		  <li style=" font-size:13px;">    Reserve a stage for 5 workdays max </li>
-		  <li style="padding-top:0.5%; font-size:13px;">   If you want to share a stage, contact the spec lead of the spec for which the stage is reserved.</li>
-		  <li style="padding-top:0.5%; font-size:13px;">      STAGE2VM4229 is reserved for Compliance PD BAU. Owner Karthick</li>
-		  <li style="padding-top:0.5%; font-size:13px;">        By default, "owner" rights for all stages belong to <a href="mailto:ksundarajan@paypal.com?subject=BAU Stage Reservation">Karthick Sundararajan</a>. Please contact him to get access. </li>
-		  <li style="padding-top:0.5%; font-size:13px;">        Best viewed in Firefox, Chrome and IE 9, refer to <a href="http://10.238.85.62/CSRM/releasenotes.html"> Release Notes </a> for additional features and documentation. </li>
-	 </ul>
-	 
-     <a class="close-reveal-modal">&#215;</a>
-</div>
-
-<div id="viewspecModal" class="reveal-modal ">
-	<div id="stylized" class="myform">
-	<h1>SEARCH FOR SPEC</h1>
-	<p>Please fill in the following fields to get the spec details.</p>
-			<form name="viewSpec" id="viewSpec"  method="post">
-			<label>Spec ID: </label>
-			<input type="text" name="specId" id="specId" style="position: relative;background: transparent;" />
-			</br></br>
-			<label>Spec Name: </label>
-			<input type="text" name="specName" id="specName" style="position: relative;background: transparent;" />
-			</br></br>
-			</form>
-			<button id="btnRegister3" onClick="searchSpec()" name="btnRegister3" >Search </button>
-	<div id="specDetails">
-	</div>
-	 
-     <a class="close-reveal-modal">&#215;</a>
-</div>
-</div>	
-
-</div>
-
-<div style="background:#D8D8D8; width:100%;">
-	<div style="position:relative;padding-top:280px;">
-		<div align="center">
-		<div id="table" align="center" style="width:95%;"></div>
-		</div>
-	</div>
-</div>	  
-
-
-</div>	  
-
-<div id="hoverContentDiv"></div>
-
+<table id="list4"></table>
+	  
 </body> 
 </html></body> 
 </html>
