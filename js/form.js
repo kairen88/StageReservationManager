@@ -7,7 +7,10 @@ $.getJSON('specDropDown.php', function(table){
  {
   if( table[row].spec_name==document.forms['viewSpec']['specName'].value && table[row].spec_id==document.forms['viewSpec']['specId'].value)
   {
-  alert("Spec name: "+table[row].spec_name+"\nSpec ID: "+table[row].spec_id+"\nSpec lead email: "+table[row].spec_lead_email+"\nDL email: "+table[row].dtl_email);
+  alert("TEST");
+    var result = "Spec name: "+table[row].spec_name+"\nSpec ID: "+table[row].spec_id+"\nSpec lead email: "+table[row].spec_lead_email+"\nDL email: "+table[row].dtl_email;
+    $("#specDetails").html(result);
+
   s=1;
   }
 
