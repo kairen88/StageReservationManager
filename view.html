@@ -485,6 +485,14 @@ function clearNewSpecForm()
 	$('#new_DTL_email').val("");
 }
 
+// remove multiple, leading or trailing spaces
+function trim(s) {
+	s = s.replace(/(^\s*)|(\s*$)/gi,"");
+	s = s.replace(/[ ]{2,}/gi," ");
+	s = s.replace(/\n /,"\n");
+	return s;
+}
+
 function createHoverContent()
 {
 	$.getJSON('specDropDown.php', function(specDetails) {
@@ -492,7 +500,7 @@ function createHoverContent()
 		for(spec in specDetails)
 		{
 			var divTag = document.createElement("div");
-			divTag.id = specDetails[spec].spec_id+"HoverDiv"; 
+			divTag.id = trim(specDetails[spec].spec_id)+"HoverDiv"; 
 			divTag.onmouseover=function (){
 											$(this).show()
 											$(this).css('opacity','1');
@@ -506,20 +514,21 @@ function createHoverContent()
 			divTag.innerHTML = '<span>' + specDetails[spec].spec_id + '</span>' + '</br>' + '<span>' + specDetails[spec].spec_name + '</span>' + '<p></p>' + 'Spec Lead Email: <a href="mailto:' + specDetails[spec].spec_lead_email + '?subject=Stage Reservation">' + specDetails[spec].spec_lead_email + '</a>' + '</br>' + 'DL Email: <a href="mailto:' + specDetails[spec].dtl_email + '?subject=Stage Reservation">' + specDetails[spec].dtl_email + '</a>' + '</br></br>'; 
 			
 			$("#hoverContentDiv").append(divTag);
-
-			setHover(specDetails[spec].spec_id)
+			
+			setHover(trim(specDetails[spec].spec_id), specDetails[spec].spec_name)
 		}
+		
 	});
 }
 
-function setHover(spec_id)
+function setHover(spec_id, spec_name)
 {
 	//$('[title~=Canada]').ezpz_tooltip({contentId:"53436HoverDiv"});
-	//alert($('#testLInk').html());
+	//alert(trim(spec_id) + 'HoverDiv');
 	//$('#viewspecbutton').ezpz_tooltip({contentId:"53436HoverDiv"});
-	//alert($('[title~="53436"]').html());
-	$('[title~="'+ spec_id +'"]').ezpz_tooltip({
-									contentId: spec_id + 'HoverDiv',
+	//alert($('[title~="'+ spec_id +'"],[title~="'+ spec_name +'"]').html());
+	$('[title~="'+ spec_id +'"],[title~="'+ spec_name +'"]').ezpz_tooltip({
+									contentId: trim(spec_id) + 'HoverDiv',
 									contentPosition: 'rightStatic',
 									stayOnContent: true,
 									offset: 0
@@ -642,9 +651,9 @@ function backgroundFade(){
 		-moz-border-radius: 10px;
 		-webkit-border-radius: 10px;
 		-khtml-border-radius: 10px;
-		-moz-box-shadow: 3px 3px 4px #000;
-		-webkit-box-shadow: 3px 3px 4px #000;
-		box-shadow: 3px 3px 4px #000;
+		-moz-box-shadow: 3px 3px 4px  	#696969;
+		-webkit-box-shadow: 3px 3px 4px  	#696969;
+		box-shadow: 3px 3px 4px  	#696969;
 		opacity:0.4;
 		<!-- text-align:center; -->
 		z-index:999;

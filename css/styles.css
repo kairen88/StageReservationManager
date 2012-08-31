@@ -182,4 +182,7 @@ br		{ clear: left; 	}
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
 	-khtml-border-radius: 10px;	
+	-moz-box-shadow: 3px 3px 4px  	#696969;
+	-webkit-box-shadow: 3px 3px 4px  	#696969;
+	box-shadow: 3px 3px 4px  	#696969;
 }

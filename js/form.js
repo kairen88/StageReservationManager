@@ -7,8 +7,9 @@ $.getJSON('specDropDown.php', function(table){
  {
   if( table[row].spec_name==document.forms['viewSpec']['specName'].value && table[row].spec_id==document.forms['viewSpec']['specId'].value)
   {
-  alert("TEST");
-    var result = "Spec name: "+table[row].spec_name+"\nSpec ID: "+table[row].spec_id+"\nSpec lead email: "+table[row].spec_lead_email+"\nDL email: "+table[row].dtl_email;
+
+    var result = "\nSpec lead email: <a href=\"mailto:"+table[row].spec_lead_email+ "?subject=Stage Reservation\">"+table[row].spec_lead_email+"</a><br/><br/>DL email: <a href=\"mailto: "+table[row].dtl_email+"?subject=Stage Reservation\">"+table[row].dtl_email+"</a>";
+
     $("#specDetails").html(result);
 
   s=1;
@@ -38,10 +39,10 @@ $.getJSON('specDropDown.php', function(table){
 			$(function() {
 				$( "#datepicker" ).datepicker({
 					beforeShow: function() { $("#dateFromBackground").css('color', 'transparent'); },
-					showOn: "both",
+					showOn: "focus",
 					onClose: function() { if($("#datepicker").val() == "") $("#dateFromBackground").css('color', 'DimGrey'); else $("#dateToBackground").css('color', 'transparent'); },
-					buttonImage: "images/calendar.gif",
-					buttonImageOnly: true,
+					//buttonImage: "images/calendar.gif",
+					buttonImageOnly: false,
 					dateFormat: "yy-mm-dd",
 					defaultDate:defaultDate,
 					onSelect: function(dateText, inst) {
@@ -54,10 +55,10 @@ $.getJSON('specDropDown.php', function(table){
 			 date2=new Date($('#datepicker').val());
 				$( "#datepicker2" ).datepicker({
 					beforeShow: function() { $("#dateToBackground").css('color', 'transparent'); },
-					showOn: "both",
+					showOn: "focus",
 					onClose: function() { if($("#datepicker2").val() == "") $("#dateToBackground").css('color', 'DimGrey'); },
-					buttonImage: "images/calendar.gif",
-					buttonImageOnly: true,
+					//buttonImage: "images/calendar.gif",
+					buttonImageOnly: false,
 					dateFormat: "yy-mm-dd",
 					defaultDate:defaultDate,
 				});
@@ -164,9 +165,9 @@ function selectMonth(month)
 			from_date=new Date(new_from_date);
 			to_date=new Date(new_to_date);	
 			var myDate=new Date();
-			myDate.setFullYear(2012,8,1);			
+			myDate.setFullYear(2012,7,31);			
 
-			curr_date.setHours(0,0,0,0)
+			curr_date.setHours(0,0,0,0);
 			
 			//check if stage is selected
 			if (stage == "")
@@ -179,7 +180,7 @@ function selectMonth(month)
 				//reservation from/to not null			
 				//reservation from/to date validation
 
-				if(from_date > to_date || (curr_date>from_date) || isNaN(from_date.getTime()) || isNaN(to_date.getTime()) )
+				if((from_date > to_date) || (curr_date>from_date) || isNaN(from_date.getTime()) || isNaN(to_date.getTime()) )
 				{
 					alert("Invalid reservation period");
 					return;
@@ -255,12 +256,14 @@ function selectMonth(month)
 											{
 												//hide ajax loader
 												$("#ajaxLoadingDiv").hide();
-												alert(response);												
-
+												alert(response);
+												
+												//alert(from_date.getFullYear());
 												if(from_date.getFullYear() != selectedYear)
 													selectYear( from_date.getFullYear() );
+												//alert(selectedYear);
 												selectMonth( from_date.getMonth() + 1 );
-
+												//alert(from_date.getMonth() + 1);
 											}});
 										}
 									return;
