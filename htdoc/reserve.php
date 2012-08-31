@@ -1,6 +1,5 @@
 <?php
 include 'config.php';
-//include 'test_email.php';
 //Establish Connection with Server
 $conn        =    mysql_connect($mysql_host,$mysql_user,$mysql_password) or die('Server Information is not Correct'); 
 mysql_select_db($mysql_database,$conn) or die('Database Information is not correct');
@@ -160,14 +159,10 @@ if(isset($_POST['stageName']))
 													
 													// echo $s_email;
 													// echo $d_email;
-													$from="CSRM@paypal.com";
-													$to="skrishnasamy@paypal.com";
-													$cc="kaiteo@paypal.com";
-											    	//$to  = $s_email . ', '.$d_email . ', '.$new_s_email. ', '.$new_d_email; 
+													$to  = $s_email . ', '.$d_email . ', '.$new_s_email. ', '.$new_d_email; 
 													$subject = "Stage Reservation period Overwritten!\n";
-													//$message= "Hi,\n Recently your Stage Reservationperiod was overwritten for the\n duration $from_date to $to_date by \n Spec name: \nDL email\n";
-													$message= "Hi,\n Recently your Stage Reservation period was overwritten for the duration $from_date to $to_date by \n\n Spec name: $spec_name \n\n Spec ID: $spec_id \n\n Spec lead email: $new_s_email \n\n DL email: $new_d_email\n";
-													authSendEmail($from, $to,$cc,$subject, $message);  
+													$body = "Hi,Recently your Stage Reservation period was overwritten for the duration 
+																$from_date to $to_date by $spec_name\n";
 													//if(	mail($to, $subject, $body))
 														//echo "mail sent ";
 													//else
@@ -176,7 +171,7 @@ if(isset($_POST['stageName']))
 													 //echo "Subject : $subject \n";
 													// echo "Message : $body ";
 													$body2 = "You have overwritten $old_spec_name's Stage reservation period from $from_date to $to_date \nPlease notify $new_s_email of this change \n";
-													//echo $body2;
+													echo $body2;
 													 
 												}	
 													
@@ -200,105 +195,9 @@ if(isset($_POST['stageName']))
 					if($res)
 					{
 						
-						echo "Stage reserved successfully.";
+						echo "\nStage reserved successfully.";
 					}
 
 }
  
 ?>
-
-
-
-<?php  
-/* * * * * * * * * * * * * * SEND EMAIL FUNCTIONS * * * * * * * * * * * * * */   
- 
-//This will send an email using auth smtp and output a log array  
-//logArray - connection,   
- 
-function authSendEmail($from, $to,$cc,$subject, $message)  
-{  
-//SMTP + SERVER DETAILS  
-/* * * * CONFIGURATION START * * * */ 
-$smtpServer = "mail.corp.ebay.com";  
-$port = "25";  
-$timeout = "30";  
-$username = "skrishnasamy@paypal.com";  
-$password = "test";  
-$localhost = "mail.corp.ebay.com";  
-$newLine = "\r\n";  
-/* * * * CONFIGURATION END * * * * */ 
- 
-//Connect to the host on the specified port  
-$smtpConnect = fsockopen($smtpServer, $port, $errno, $errstr, $timeout);  
-$smtpResponse = fgets($smtpConnect, 515);  
-if(empty($smtpConnect))   
-{  
-$output = "Failed to connect: $smtpResponse";  
-return $output;  
-}  
-else 
-{  
-$logArray['connection'] = "Connected: $smtpResponse";  
-}  
- 
-//Request Auth Login  
-fputs($smtpConnect,"AUTH LOGIN" . $newLine);  
-$talk["auth"] = fgets($smtpConnect, 515);  
-//$logArray['authrequest'] = "$smtpResponse";  
- 
-//Send username  
-fputs($smtpConnect, base64_encode($username) . $newLine);  
-$talk["user"]= fgets($smtpConnect, 515);  
-//$logArray['authusername'] = "$smtpResponse";  
- 
-//Send password  
-fputs($smtpConnect, base64_encode($password) . $newLine);  
-$talk["pword"]= fgets($smtpConnect, 515);  
-//$logArray['authpassword'] = "$smtpResponse";  
- 
-//Say Hello to SMTP  
-fputs($smtpConnect, "HELO $localhost" . $newLine);  
-$talk["hello"] = fgets($smtpConnect, 515);  
-//$logArray['heloresponse'] = "$smtpResponse";  
- 
-//Email From  
-fputs($smtpConnect, "MAIL FROM: $from" . $newLine);  
-$talk["from"]= fgets($smtpConnect, 515);  
-//$logArray['mailfromresponse'] = "$smtpResponse";  
- 
-//Email To  
-fputs($smtpConnect, "RCPT TO: $to" . $newLine);  
-$talk["to"] = fgets($smtpConnect, 515);  
-//$logArray['mailtoresponse'] = "$smtpResponse";  
-
-//CC  
-fputs($smtpConnect, "RCPT TO: $cc" . $newLine);  
-$talk["Cc"]= fgets($smtpConnect, 515);  
-//$logArray['mailtoresponse'] = "$smtpResponse";  
- 
-//The Email  
-fputs($smtpConnect, "DATA" . $newLine);  
-$talk["data"] = fgets($smtpConnect, 515);  
-//$logArray['data1response'] = "$smtpResponse";  
- 
-//Construct Headers  
-$headers = "MIME-Version: 1.0" . $newLine;  
-$headers .= "Content-type: text/html; charset=iso-8859-1" . $newLine;  
-$headers .= "To:<$to>" . $newLine;  
-$headers .= "From:<$from>" . $newLine;  
-$headers .= "Cc:<$cc>" . $newLine;  
- 
-fputs($smtpConnect, "To: $to\nFrom: $from \nCc:$cc\nSubject: $subject\n$message\n.\n");  
-$talk["send"]= fgets($smtpConnect, 515);  
-$logArray['data2response'] = "$smtpResponse";  
- 
-// Say Bye to SMTP  
-fputs($smtpConnect,"QUIT" . $newLine);   
-$smtpResponse = fgets($smtpConnect, 515);  
-$logArray['quitresponse'] = "$smtpResponse";   
-
-//insert var_dump here -- uncomment out the next line for debug info
-//var_dump($logArray);
-}  
-?>  
- 
