@@ -140,7 +140,7 @@ function populateTable(monthSelected, stageArray)
 						if(table[row].spec_id == 0)
 							ary[table[row].stage_name.toString()] = '-' + '\n' + table[row].spec_name;
 						else
-							ary[table[row].stage_name.toString()] = table[row].spec_id + '\n' + table[row].spec_name;
+							ary[table[row].stage_name.toString()] = trim(table[row].spec_id) + ' \n ' + trim(table[row].spec_name);
 						
 					}else
 					{}	
