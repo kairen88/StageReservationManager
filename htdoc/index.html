@@ -103,7 +103,7 @@ function createTable(monthSelected)
 
 function populateTable(monthSelected, stageArray)
 {
-	$.getJSON('http://10.238.85.62/CSRM/display.php', function(table) {
+	$.getJSON('display.php', function(table) {
 
 		//need to get month to display from user
 		var objMonth = new Date(monthSelected);
@@ -521,9 +521,8 @@ window.onload = init;
 <div align="center">
 <div class="MonthPicker" id="MonthPicker" style="width:90%;" align="center"></div>
 <div id="table" align="center" style="width:95%;"></div>
-<div>	  
+</div>	  
 
-<table id="list4"></table>
 	  
 </body> 
 </html></body> 
